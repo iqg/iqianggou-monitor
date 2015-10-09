@@ -1,0 +1,12 @@
+dwd_tongji:
+    resource: "@DWDTongjiBundle/Controller/"
+    type:     annotation
+
+dwd_data:
+    resource: "@DWDDataBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+homepage:
+    pattern:    /
+    defaults: { _controller: DWDTongjiBundle:Analyse:index }

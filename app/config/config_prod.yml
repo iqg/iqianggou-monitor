@@ -1,0 +1,47 @@
+imports:
+    - { resource: config.yml }
+
+#framework:
+#    validation:
+#        cache: validator.mapping.cache.apc
+#    serializer:
+#        cache: serializer.mapping.cache.apc
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        console:
+            type:  console
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: %redis_dsn%/10
+            logging: %kernel.debug%
+        cache:
+            type: predis
+            alias: cache
+            dsn: %redis_dsn%/11
+            options:
+                profile: 2.2
+                connection_timeout: 10
+                read_write_timeout: 30
+        session:
+            type: predis
+            alias: session
+            dsn: %redis_dsn%/12

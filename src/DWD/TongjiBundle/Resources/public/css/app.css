@@ -79,3 +79,9 @@
     background-color: #f5f5f5;
     color: #2074ac;
 }
+
+.api-path-name {
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

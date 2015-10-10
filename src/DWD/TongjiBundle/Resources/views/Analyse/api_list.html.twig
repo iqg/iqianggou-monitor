@@ -24,18 +24,18 @@
         <tr>
             <th>访问地址</th>
             <th>访问次数</th>
-            <th>最大响应时间(ms)</th>
-            <th>最小响应时间(ms)</th>
-            <th>平均响应时间(ms)</th>
-            <th>调用成功次数</th>
-            <th>调用失败次数</th>
+            <th>最大耗时ms</th>
+            <th>最小耗时ms</th>
+            <th>平均耗时ms</th>
+            <th>调用成功</th>
+            <th>调用失败</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
         {% for apiInfo in apiList %}
         <tr>
-            <td>{{ apiInfo.path }}</td>
+            <td><p title="{{ apiInfo.path }}" class="api-path-name">{{ apiInfo.path }}</p></td>
             <td>{{ apiInfo.called }}</td>
             <td>{{ apiInfo.maxCost|round(2) }}</td>
             <td>{{ apiInfo.minCost|round(2) }}</td>

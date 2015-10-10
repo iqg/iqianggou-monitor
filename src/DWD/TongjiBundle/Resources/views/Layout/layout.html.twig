@@ -43,9 +43,8 @@
                                     <ul class="nav navbar-nav navbar-right">
 
                                         {% if app.user %}
-                                            <li><a href="#">Dashboard</a></li>
-                                            <li><a href="#">Settings</a></li>
-                                            <li><a href="#">Profile</a></li>
+                                            <li><a href="{{ path('dwd_tongji_analyse_dashboard') }}">接口监控</a></li>
+                                            <li><a href="#">脚本监控</a></li>
 
                                             <li>
                                                 <a href="{{ path('dwd_tongji_logout') }}">

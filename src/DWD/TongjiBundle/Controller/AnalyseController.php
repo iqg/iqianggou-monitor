@@ -72,6 +72,7 @@ class AnalyseController extends Controller
 
         $calledArray = array();
         $costArray = array();
+        $maxCostArray = array();
         $categories = array();
         $startTimestamp = intval($startTime);
         $currentTimestamp = $startTimestamp;
@@ -93,6 +94,7 @@ class AnalyseController extends Controller
                 }
                 $calledArray []= $doc['called'];
                 $costArray []= round($doc['totalCost'] / $doc['called'], 2);
+                $maxCostArray []= $doc['maxCost'];
                 $categories []= date("Y-m-d", $doc['startTimestamp']);
             }
             $currentTimestamp = $endTimestamp;
@@ -147,18 +149,26 @@ class AnalyseController extends Controller
                 'color' => '#AA4643',
                 'data'  => $costArray,
             ),
+            array(
+                'name'  => '最大响应时间',
+                'type'  => 'spline',
+                'color' => '#000000',
+                'yAxis' => 2,
+                'dashStyle' => 'shortdot',
+                'data'  => $maxCostArray,
+            )
         );
         $yData = array(
             array(
                 'labels' => array(
-                    'formatter' => new Expr('function () { return this.value.toFixed(0) + " ms" }'),
+                    'formatter' => new Expr('function () { return this.value.toFixed(0) + "毫秒" }'),
                     'style'     => array('color' => '#AA4643')
                 ),
                 'title' => array(
                     'text'  => '平均响应时间',
                     'style' => array('color' => '#AA4643')
                 ),
-                'opposite' => true,
+                'opposite' => true
             ),
             array(
                 'labels' => array(
@@ -171,6 +181,18 @@ class AnalyseController extends Controller
                     'style' => array('color' => '#4572A7')
                 ),
             ),
+            array(
+                'labels' => array(
+                    'formatter' => new Expr('function () { return this.value.toFixed(0) + "毫秒" }'),
+                    'style'     => array('color' => '#000000')
+                ),
+                'gridLineWidth' => 0,
+                'title' => array(
+                    'text'  => '最大响应时间',
+                    'style' => array('color' => '#000000')
+                ),
+                'opposite' => true,
+            ),
         );
 
         $ob = new Highchart();
@@ -178,13 +200,16 @@ class AnalyseController extends Controller
         $ob->chart->renderTo('container'); // The #id of the div where to render the chart
         $ob->chart->type('column');
         $ob->title->text('访问请求-' . $uri);
+        $ob->subtitle->text(date('Y-m-d', $startTime) . '——' . date('Y-m-d', $endTime));
         $ob->xAxis->categories($categories);
+        $ob->xAxis->crosshair(true);
         $ob->yAxis($yData);
         $ob->legend->enabled(false);
         $formatter = new Expr('function () {
                  var unit = {
                      "访问次数": "次",
-                     "平均响应时间": "ms"
+                     "平均响应时间": "ms",
+                     "最大响应时间" : "ms"
                  }[this.series.name];
                  return this.x + ": <b>" + this.y.toFixed(2) + "</b> " + unit;
              }');

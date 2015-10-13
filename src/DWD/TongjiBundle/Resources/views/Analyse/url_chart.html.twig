@@ -1,15 +1,32 @@
 {% extends "DWDTongjiBundle:Layout:layout.html.twig" %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/dwdtongji/css/bootstrap-datepicker.min.css') }}" />
+{% endblock %}
+
 {% block body %}
     <div class="body-query-wrap">
         <div class="form-group">
             <label class="control-label">查询区间：</label>
             <div class="form-field">
-                <a href="{{ path('dwd_tongji_analyse_dashboard_urichart', { uri: uri, type: 'minute', startTime: currentTimestamp, endTime: currentTimestamp + 86400, duration: 3600, regionId : 0 }) }}"><span class="select-item {% if regionId == 0 %}select-item-sel{% endif %}">昨天</span></a>
+<!--                <a href="{{ path('dwd_tongji_analyse_dashboard_urichart', { uri: uri, type: 'minute', startTime: currentTimestamp, endTime: currentTimestamp + 86400, duration: 3600, regionId : 0 }) }}"><span class="select-item {% if regionId == 0 %}select-item-sel{% endif %}">昨天</span></a> -->
                 <a href="{{ path('dwd_tongji_analyse_dashboard_urichart', { uri: uri, type: 'day', startTime: currentTimestamp - 86400*1, endTime: currentTimestamp, duration: 86400, regionId : 1 }) }}"><span class="select-item {% if regionId == 1 %}select-item-sel{% endif %}">过去2天</span></a>
                 <a href="{{ path('dwd_tongji_analyse_dashboard_urichart', { uri: uri, type: 'day', startTime: currentTimestamp - 86400*6, endTime: currentTimestamp, duration: 86400, regionId : 2 }) }}"><span class="select-item {% if regionId == 2 %}select-item-sel{% endif %}">过去7天</span></a>
                 <a href="{{ path('dwd_tongji_analyse_dashboard_urichart', { uri: uri, type: 'day', startTime: currentTimestamp - 86400*30, endTime: currentTimestamp, duration: 86400, regionId : 3 }) }}"><span class="select-item {% if regionId == 3 %}select-item-sel{% endif %}">过去30天</span></a>
             </div>
+            <form action="{{ path('dwd_tongji_analyse_dashboard_urichart') }}" method="get">
+                <label class="control-label">指定区间：</label>
+                <input type="text" id="datepicker-start-time-format" class="input-small">
+                <span class="add-on"> - </span>
+                <input type="text" id="datepicker-end-time-format" class="input-small">
+                <button class="btn btn-primary btn-xs" type="submit" style="margin: 0 0 0 10px;">搜索</button>
+                <input type="hidden" id="start-time-timestamp" name="startTime">
+                <input type="hidden" id="end-time-timestamp" name="endTime">
+                <input type="hidden" name="uri" value="{{ uri }}">
+                <input type="hidden" name="type" value="day">
+                <input type="hidden" name="duration" value="86400">
+                <input type="hidden" name="regionId" value="5">
+            </form>
         </div>
     </div>
     <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
@@ -17,11 +34,29 @@
 
 {% block javascripts %}
 
+    <script src="{{ asset('bundles/dwdtongji/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/dwdtongji/js/locales/bootstrap-datepicker.zh-CN.min.js') }}"></script>
     <script src="{{ asset('bundles/dwdtongji/js/highcharts.js') }}"></script>
     <script src="{{ asset('bundles/dwdtongji/js/exporting.js') }}"></script>
 
     <script type="text/javascript">
         {{ chart(chart) }}
+        $(function() {
+            $( "#datepicker-start-time-format" ).datepicker({
+                language: 'zh-CN',
+                format: "yyyy-mm-dd"
+            }).on("changeDate", function (e) {
+                $("#start-time-timestamp").val(e.date.getTime()/1000);
+            });
+            $( "#datepicker-end-time-format").datepicker({
+                language: 'zh-CN',
+                format: "yyyy-mm-dd"
+            }).on("changeDate", function (e) {
+                $("#end-time-timestamp").val(e.date.getTime()/1000);
+            });
+
+
+        });
     </script>
 
 {% endblock %}

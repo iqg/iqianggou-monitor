@@ -7,9 +7,6 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
-    cookie_domain: .iqianggou.dev
-    redis_dsn: 'redis://127.0.0.1:6379'
 
 framework:
     #esi:             ~
@@ -30,7 +27,7 @@ framework:
     trusted_proxies: ~
     session:
         cookie_domain: %cookie_domain%
-        cookie_lifetime: 315360000 #10 years
+        cookie_lifetime: %cookie_lifetime%
         handler_id: session.handler.pdo
     fragments:       ~
     http_method_override: true
@@ -79,9 +76,9 @@ doctrine:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017 #mongodb://iqg_search:6yhn$RFV@10.0.0.10:27017/iqianggou_search
+            server: "mongodb://%database_mongo_prod_uri%/%database_mongo_prod_db%" #mongodb://iqg_search:6yhn$RFV@10.0.0.10:27017/iqianggou_search
             options: {}
-    default_database: iqianggou_search
+    default_database: "%database_mongo_prod_db%"
     document_managers:
         default:
             auto_mapping: true

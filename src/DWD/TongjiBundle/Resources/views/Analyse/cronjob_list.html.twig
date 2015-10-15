@@ -1,0 +1,130 @@
+{% extends "DWDTongjiBundle:Layout:layout.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/dwdtongji/css/bootstrap-datetimepicker.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/dwdtongji/css/jquery.dataTables.min.css') }}" />
+{% endblock %}
+
+{% block body %}
+    <div class="body-query-wrap">
+        <div class="form-group">
+            <form action="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}" method="get">
+                <div class="cronjob-filter-obj-container">
+                    <label class="control-label">执行状态：</label>
+                    <select name="status">
+                        <option value="">显示全部</option>
+                        <option value="99" {% if code == 99 %}selected="selected"{% endif %}>执行失败</option>
+                        <option value="98" {% if code == 98 %}selected="selected"{% endif %}>执行超时</option>
+                        <option value="0" {% if code == 0 %}selected="selected"{% endif %}>执行成功</option>
+                        <option value="100" {% if code == 100 %}selected="selected"{% endif %}>未执行</option>
+                    </select>
+                </div>
+                <div class="cronjob-filter-obj-container">
+                    <label class="control-label">拥有者：</label>
+                    <select name="owner">
+                        <option value="">显示全部</option>
+                        <option value="zhangchao">张超</option>
+                        <option value="taojun">陶俊</option>
+                        <option value="caowei">曹伟</option>
+                        <option value="guonan">郭楠</option>
+                        <option value="xujianan">徐佳楠</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="cronjob-filter-obj-container">
+                    <label class="control-label">时间：</label>
+                    <input type="text" id="datepicker-start-time-format" name="startTime" class="input-small" value="{{ startTime|date('Y-m-d H:i') }}">
+                    <span class="add-on"> - </span>
+                    <input type="text" id="datepicker-end-time-format" name="endTime" class="input-small" value="{{ endTime|date('Y-m-d H:i') }}">
+                </div>
+                <button class="btn btn-primary btn-xs" type="submit" style="margin: 0 0 0 10px;">搜索</button>
+            </form>
+        </div>
+    </div>
+    <table id="table_cronjob_list" class="table table-striped" data-order='[[ 3, "desc" ]]' data-page-length='50'>
+        <thead>
+        <tr>
+            <th>脚本名称</th>
+            <th>脚本参数</th>
+            <th>脚本信息</th>
+            <th>启动时间</th>
+            <th>结束时间</th>
+            <th>耗时s</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cronjobInfo in  cronjobList %}
+            <tr>
+                <td>{{ cronjobInfo.name }}</td>
+
+                <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
+                <td><textarea disabled="disabled">{{ cronjobInfo.msg }}</textarea></td>
+                <td>{{ cronjobInfo.startTime|date('Y-m-d H:i:s') }}</td>
+                <td>{{ cronjobInfo.stopTime|date('Y-m-d H:i:s') }}</td>
+                <td>{{ cronjobInfo.cost }}</td>
+                <td><p class="{{ codeHash[cronjobInfo.code]['color'] }}">{{ codeHash[cronjobInfo.code]['label'] }}</p></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/dwdtongji/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/dwdtongji/js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
+    <script src="{{ asset('bundles/dwdtongji/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+
+            $('#table_cronjob_list').DataTable({
+                "language" : {
+                    sProcessing: "处理中...",
+                    sLengthMenu: "显示 _MENU_ 项结果",
+                    sZeroRecords: "没有匹配结果",
+                    sInfo: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    sInfoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                    sInfoFiltered: "(由 _MAX_ 项结果过滤)",
+                    sInfoPostFix: "",
+                    sSearch: "搜索:",
+                    sUrl: "",
+                    sEmptyTable: "表中数据为空",
+                    sLoadingRecords: "载入中...",
+                    sInfoThousands: ",",
+                    oPaginate: {
+                        sFirst: "首页",
+                        sPrevious: "上页",
+                        sNext: "下页",
+                        sLast: "末页"
+                    },
+                    oAria: {
+                        sSortAscending: ": 以升序排列此列",
+                        sSortDescending: ": 以降序排列此列"
+                    }
+                }
+            });
+        } );
+
+        $(function() {
+            $( "#datepicker-start-time-format" ).datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                autoclose: 1,
+                todayHighlight : 1,
+                format: "yyyy-mm-dd hh:ii"
+            });
+            $( "#datepicker-end-time-format").datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                autoclose: 1,
+                todayHighlight : 1,
+                format: "yyyy-mm-dd hh:ii"
+            });
+
+
+        });
+    </script>
+
+{% endblock %}

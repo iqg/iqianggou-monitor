@@ -85,3 +85,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.cronjob-filter-obj-container {
+    float: left;
+    vertical-align: top;
+    margin-right: 14px;
+}

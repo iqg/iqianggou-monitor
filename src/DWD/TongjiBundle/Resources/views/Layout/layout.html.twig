@@ -44,7 +44,7 @@
 
                                         {% if app.user %}
                                             <li><a href="{{ path('dwd_tongji_analyse_dashboard') }}">接口监控</a></li>
-                                            <li><a href="#">脚本监控</a></li>
+                                            <li><a href="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}">脚本监控</a></li>
 
                                             <li>
                                                 <a href="{{ path('dwd_tongji_logout') }}">

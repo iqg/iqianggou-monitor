@@ -54,7 +54,7 @@ class MonitorCronJobController extends Controller
         }
         if (isset($owner) && $owner != '') {
             $qb
-                ->leftJoin("cd.CronJob", 'c')
+                ->leftJoin("cd.cronjob", 'c')
                 ->andWhere('c.owner = :owner')
                 ->setParameter('owner', $owner);
         }

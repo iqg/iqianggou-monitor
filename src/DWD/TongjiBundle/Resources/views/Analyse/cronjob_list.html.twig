@@ -15,7 +15,7 @@
                         <option value="">显示全部</option>
                         <option value="99" {% if code == 99 %}selected="selected"{% endif %}>执行失败</option>
                         <option value="98" {% if code == 98 %}selected="selected"{% endif %}>执行超时</option>
-                        <option value="0" {% if code == 0 %}selected="selected"{% endif %}>执行成功</option>
+                        <option value="0" {% if code is not empty and code == 0 %}selected="selected"{% endif %}>执行成功</option>
                         <option value="100" {% if code == 100 %}selected="selected"{% endif %}>未执行</option>
                     </select>
                 </div>
@@ -23,12 +23,12 @@
                     <label class="control-label">拥有者：</label>
                     <select name="owner">
                         <option value="">显示全部</option>
-                        <option value="zhangchao">张超</option>
-                        <option value="taojun">陶俊</option>
-                        <option value="caowei">曹伟</option>
-                        <option value="guonan">郭楠</option>
-                        <option value="xujianan">徐佳楠</option>
-                        <option value="other">其他</option>
+                        <option value="zhangchao" {% if owner == 'zhangchao' %}selected="selected"{% endif %}>张超</option>
+                        <option value="taojun" {% if owner == 'taojun' %}selected="selected"{% endif %}>陶俊</option>
+                        <option value="caowei" {% if owner == 'caowei' %}selected="selected"{% endif %}>曹伟</option>
+                        <option value="guonan" {% if owner == 'guonan' %}selected="selected"{% endif %}>郭楠</option>
+                        <option value="xujianan" {% if owner == 'xujianan' %}selected="selected"{% endif %}>徐佳楠</option>
+                        <option value="other" {% if owner == 'other' %}selected="selected"{% endif %}>其他</option>
                     </select>
                 </div>
                 <div class="cronjob-filter-obj-container">

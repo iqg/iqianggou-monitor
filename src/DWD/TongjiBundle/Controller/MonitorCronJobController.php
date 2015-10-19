@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MonitorCronJobController extends Controller
 {
-    protected $codeHash = array( '0' => array( 'color' => 'text-success', 'label' => '成功' ), '99' => array( 'color' => 'text-danger', 'label' => '失败' ), '98' => array( 'color' => 'text-warning', 'label' => '超时' ) );
+    protected $codeHash = array( '0' => array( 'color' => 'text-success', 'label' => '成功' ), '99' => array( 'color' => 'text-danger', 'label' => '失败' ), '98' => array( 'color' => 'text-warning', 'label' => '超时' ), "" => array( 'color' => 'text-muted', 'label' => '未执行' ) );
     protected $_default_time_interval = 86400;
 
     /**

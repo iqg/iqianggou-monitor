@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="cronjob")
  */
 class CronJob
-    {
+{
     /**
      * @var integer
      * @ORM\Id
@@ -51,19 +51,19 @@ class CronJob
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false, options={"default"=true})
      */
     private $msg_switch_flag = true;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false, options={"default"=false})
      */
     private $msg_send_flag = false;
 
     /**
      * @var integer
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default"=0})
      */
     private $last_execute_id;
 
@@ -75,37 +75,37 @@ class CronJob
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_cycle", type="integer")
+     * @ORM\Column(name="execute_cycle", type="integer", nullable=true)
      */
     private $executeCycle;
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_point_minute", type="integer")
+     * @ORM\Column(name="execute_point_minute", type="integer", nullable=true)
      */
     private $executePointMinute;
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_point_hour", type="integer")
+     * @ORM\Column(name="execute_point_hour", type="integer", nullable=true)
      */
     private $executePointHour;
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_point_day", type="integer")
+     * @ORM\Column(name="execute_point_day", type="integer", nullable=true)
      */
     private $executePointDay;
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_point_month", type="integer")
+     * @ORM\Column(name="execute_point_month", type="integer", nullable=true)
      */
     private $executePointMonth;
 
     /**
      * @var integer
-     * @ORM\Column(name="execute_point_week", type="integer")
+     * @ORM\Column(name="execute_point_week", type="integer", nullable=true)
      */
     private $executePointWeek;
 
@@ -117,19 +117,14 @@ class CronJob
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $note;
 
     /**
-     * @ORM\OneToMany(targetEntity="CronJobData", mappedBy="cronjob")
-     */
-    protected $cronjob_datas;
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -152,7 +147,7 @@ class CronJob
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -175,7 +170,7 @@ class CronJob
     /**
      * Get owner
      *
-     * @return string 
+     * @return string
      */
     public function getOwner()
     {
@@ -198,7 +193,7 @@ class CronJob
     /**
      * Get mobile
      *
-     * @return string 
+     * @return string
      */
     public function getMobile()
     {
@@ -221,7 +216,7 @@ class CronJob
     /**
      * Get job
      *
-     * @return string 
+     * @return string
      */
     public function getJob()
     {
@@ -244,7 +239,7 @@ class CronJob
     /**
      * Get msg_switch_flag
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMsgSwitchFlag()
     {
@@ -267,7 +262,7 @@ class CronJob
     /**
      * Get msg_send_flag
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMsgSendFlag()
     {
@@ -290,7 +285,7 @@ class CronJob
     /**
      * Get last_execute_id
      *
-     * @return integer 
+     * @return integer
      */
     public function getLastExecuteId()
     {
@@ -313,7 +308,7 @@ class CronJob
     /**
      * Get executeCycleEnabled
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getExecuteCycleEnabled()
     {
@@ -336,7 +331,7 @@ class CronJob
     /**
      * Get executeCycle
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecuteCycle()
     {
@@ -359,7 +354,7 @@ class CronJob
     /**
      * Get executePointMinute
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecutePointMinute()
     {
@@ -382,7 +377,7 @@ class CronJob
     /**
      * Get executePointHour
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecutePointHour()
     {
@@ -405,7 +400,7 @@ class CronJob
     /**
      * Get executePointDay
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecutePointDay()
     {
@@ -428,7 +423,7 @@ class CronJob
     /**
      * Get executePointMonth
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecutePointMonth()
     {
@@ -451,7 +446,7 @@ class CronJob
     /**
      * Get executePointWeek
      *
-     * @return integer 
+     * @return integer
      */
     public function getExecutePointWeek()
     {
@@ -474,7 +469,7 @@ class CronJob
     /**
      * Get maxExecuteTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getMaxExecuteTime()
     {
@@ -497,7 +492,7 @@ class CronJob
     /**
      * Get note
      *
-     * @return string 
+     * @return string
      */
     public function getNote()
     {

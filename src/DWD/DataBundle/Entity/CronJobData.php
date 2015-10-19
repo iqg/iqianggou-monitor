@@ -13,7 +13,14 @@ use Doctrine\ORM\Mapping as ORM;
  * Class CronJobData
  * @package DWD\DataBundle\Entity
  * @ORM\Entity
- * @ORM\Table(name="cronjob_data")
+ * @ORM\Table(name="cronjob_data",
+ *      indexes={
+ *          @ORM\Index(name="code", columns={"code"}),
+ *          @ORM\Index(name="name", columns={"name"}),
+ *          @ORM\Index(name="flag", columns={"flag"}),
+ *          @ORM\Index(name="start_time", columns={"start_time"})
+ *      }
+ * )
  */
 class CronJobData
 {
@@ -39,19 +46,19 @@ class CronJobData
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, nullable=true)
      */
     private $msg;
 
     /**
      * @var integer
-     * @ORM\Column(name="start_time", type="integer")
+     * @ORM\Column(name="start_time", type="integer", nullable=true)
      */
     private $startTime;
 
     /**
      * @var integer
-     * @ORM\Column(name="stop_time", type="integer")
+     * @ORM\Column(name="stop_time", type="integer", nullable=true)
      */
     private $stopTime;
 
@@ -63,26 +70,21 @@ class CronJobData
 
     /**
      * @var integer
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $cost;
 
     /**
      * @var integer
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $code;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CronJob", inversedBy="cronjob_datas")
-     * @ORM\JoinColumn(name="name", referencedColumnName="name", nullable=false)
-     */
-    protected $cronjob;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -105,7 +107,7 @@ class CronJobData
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -128,7 +130,7 @@ class CronJobData
     /**
      * Get job
      *
-     * @return string 
+     * @return string
      */
     public function getJob()
     {
@@ -151,7 +153,7 @@ class CronJobData
     /**
      * Get msg
      *
-     * @return string 
+     * @return string
      */
     public function getMsg()
     {
@@ -174,7 +176,7 @@ class CronJobData
     /**
      * Get startTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getStartTime()
     {
@@ -197,7 +199,7 @@ class CronJobData
     /**
      * Get stopTime
      *
-     * @return integer 
+     * @return integer
      */
     public function getStopTime()
     {
@@ -220,7 +222,7 @@ class CronJobData
     /**
      * Get flag
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getFlag()
     {
@@ -243,7 +245,7 @@ class CronJobData
     /**
      * Get cost
      *
-     * @return integer 
+     * @return integer
      */
     public function getCost()
     {
@@ -266,7 +268,7 @@ class CronJobData
     /**
      * Get code
      *
-     * @return integer 
+     * @return integer
      */
     public function getCode()
     {

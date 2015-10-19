@@ -57,7 +57,7 @@
         <tbody>
         {% for cronjobInfo in  cronjobList %}
             <tr>
-                <td>{{ cronjobInfo.name }}</td>
+                <td><p title="{{ cronjobInfo.name }}" class="api-path-name">{{ cronjobInfo.name }}</p></td>
 
                 <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
                 <td><textarea disabled="disabled">{{ cronjobInfo.msg }}</textarea></td>

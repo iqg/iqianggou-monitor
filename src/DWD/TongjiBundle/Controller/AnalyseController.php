@@ -205,7 +205,7 @@ class AnalyseController extends Controller
         $ob->xAxis->categories($categories);
         $ob->xAxis->crosshair(true);
         $ob->yAxis($yData);
-        $ob->legend->enabled(false);
+        $ob->legend->enabled(true);
         $formatter = new Expr('function () {
                  var unit = {
                      "访问次数": "次",

@@ -122,6 +122,11 @@ class CronJob
     private $note;
 
     /**
+     * @ORM\OneToMany(targetEntity="CronJobData", mappedBy="cronjob")
+     */
+    protected $cronjob_datas;
+
+    /**
      * Get id
      *
      * @return integer

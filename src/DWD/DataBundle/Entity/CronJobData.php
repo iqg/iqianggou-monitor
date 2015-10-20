@@ -80,6 +80,11 @@ class CronJobData
      */
     private $code;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="CronJob", inversedBy="cronjob_datas")
+     * @ORM\JoinColumn(name="name", referencedColumnName="name", nullable=false)
+     */
+    protected $cronjob;
 
     /**
      * Get id

@@ -1,3 +1,7 @@
+{% set codeHash = { '0': { 'color': 'text-success', 'label': '成功' }, '99': { 'color': 'text-danger', 'label': '失败' }, '98': { 'color': 'text-warning', 'label': '超时' }, "": { 'color': 'text-muted', 'label': '执行中' } } %}
+{% set ownerHash = { 'zhangchao': '张超', 'taojun': '陶俊', 'caowei': '曹伟', 'guonan': '郭楠', 'xujianan': '徐佳楠', 'other': '其他' } %}
+{% set msgSwitchFlagHash = { '0': { 'label': '关' }, '1': { 'label': '开' } } %}
+
 {% extends "DWDTongjiBundle:Layout:layout.html.twig" %}
 
 {% block stylesheets %}
@@ -6,70 +10,112 @@
 {% endblock %}
 
 {% block body %}
-    <div class="body-query-wrap">
-        <div class="form-group">
-            <form action="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}" method="get">
-                <div class="cronjob-filter-obj-container">
-                    <label class="control-label">执行状态：</label>
-                    <select name="status">
-                        <option value="">显示全部</option>
-                        <option value="99" {% if code == 99 %}selected="selected"{% endif %}>执行失败</option>
-                        <option value="98" {% if code == 98 %}selected="selected"{% endif %}>执行超时</option>
-                        <option value="0" {% if code is not empty and code == 0 %}selected="selected"{% endif %}>执行成功</option>
-                        <option value="100" {% if code == 100 %}selected="selected"{% endif %}>未执行</option>
-                    </select>
+    <div class="tabbable"> <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">执行信息</a></li>
+            <li><a href="#tab2" data-toggle="tab">脚本信息</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <div class="body-query-wrap">
+                    <div class="form-group">
+                        <form action="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}" method="get">
+                            <div class="cronjob-filter-obj-container">
+                                <label class="control-label">执行状态：</label>
+                                <select name="status">
+                                    <option value="">显示全部</option>
+                                    <option value="99" {% if code == 99 %}selected="selected"{% endif %}>执行失败</option>
+                                    <option value="98" {% if code == 98 %}selected="selected"{% endif %}>执行超时</option>
+                                    <option value="0" {% if code is not empty and code == 0 %}selected="selected"{% endif %}>执行成功</option>
+                                    <option value="101" {% if code == 101 %}selected="selected"{% endif %}>未执行</option>
+                                    <option value="100" {% if code == 100 %}selected="selected"{% endif %}>执行中</option>
+                                </select>
+                            </div>
+                            <div class="cronjob-filter-obj-container">
+                                <label class="control-label">拥有者：</label>
+                                <select name="owner">
+                                    <option value="">显示全部</option>
+                                    <option value="zhangchao" {% if owner == 'zhangchao' %}selected="selected"{% endif %}>张超</option>
+                                    <option value="taojun" {% if owner == 'taojun' %}selected="selected"{% endif %}>陶俊</option>
+                                    <option value="caowei" {% if owner == 'caowei' %}selected="selected"{% endif %}>曹伟</option>
+                                    <option value="guonan" {% if owner == 'guonan' %}selected="selected"{% endif %}>郭楠</option>
+                                    <option value="xujianan" {% if owner == 'xujianan' %}selected="selected"{% endif %}>徐佳楠</option>
+                                    <option value="other" {% if owner == 'other' %}selected="selected"{% endif %}>其他</option>
+                                </select>
+                            </div>
+                            <div class="cronjob-filter-obj-container">
+                                <label class="control-label">时间：</label>
+                                <input type="text" id="datepicker-start-time-format" name="startTime" class="input-small" value="{{ startTime|date('Y-m-d H:i') }}">
+                                <span class="add-on"> - </span>
+                                <input type="text" id="datepicker-end-time-format" name="endTime" class="input-small" value="{{ endTime|date('Y-m-d H:i') }}">
+                            </div>
+                            <button class="btn btn-primary btn-xs" type="submit" style="margin: 0 0 0 10px;">搜索</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="cronjob-filter-obj-container">
-                    <label class="control-label">拥有者：</label>
-                    <select name="owner">
-                        <option value="">显示全部</option>
-                        <option value="zhangchao" {% if owner == 'zhangchao' %}selected="selected"{% endif %}>张超</option>
-                        <option value="taojun" {% if owner == 'taojun' %}selected="selected"{% endif %}>陶俊</option>
-                        <option value="caowei" {% if owner == 'caowei' %}selected="selected"{% endif %}>曹伟</option>
-                        <option value="guonan" {% if owner == 'guonan' %}selected="selected"{% endif %}>郭楠</option>
-                        <option value="xujianan" {% if owner == 'xujianan' %}selected="selected"{% endif %}>徐佳楠</option>
-                        <option value="other" {% if owner == 'other' %}selected="selected"{% endif %}>其他</option>
-                    </select>
-                </div>
-                <div class="cronjob-filter-obj-container">
-                    <label class="control-label">时间：</label>
-                    <input type="text" id="datepicker-start-time-format" name="startTime" class="input-small" value="{{ startTime|date('Y-m-d H:i') }}">
-                    <span class="add-on"> - </span>
-                    <input type="text" id="datepicker-end-time-format" name="endTime" class="input-small" value="{{ endTime|date('Y-m-d H:i') }}">
-                </div>
-                <button class="btn btn-primary btn-xs" type="submit" style="margin: 0 0 0 10px;">搜索</button>
-            </form>
+                <table id="table_cronjob_list" class="table table-striped" data-order='[[ 3, "desc" ]]' data-page-length='50'>
+                    <thead>
+                    <tr>
+                        <th>脚本名称</th>
+                        <th>脚本参数</th>
+                        <th>脚本信息</th>
+                        <th>启动时间</th>
+                        <th>结束时间</th>
+                        <th>耗时s</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cronjobInfo in cronjobDataList %}
+                        <tr>
+                            <td><p title="{{ cronjobInfo.name }}" class="api-path-name">{{ cronjobInfo.name }}</p></td>
+
+                            <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
+                            <td><textarea disabled="disabled">{{ cronjobInfo.msg }}</textarea></td>
+                            <td>{% if cronjobInfo.startTime != '' %}{{ cronjobInfo.startTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if cronjobInfo.stopTime != '' %}{{ cronjobInfo.stopTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{{ cronjobInfo.cost }}</td>
+                            <td><p class="{{ codeHash[cronjobInfo.code]['color'] }}">{{ codeHash[cronjobInfo.code]['label'] }}</p></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab2">
+                <table id="table_cronjob_info" class="table table-striped" data-order='[[ 3, "desc" ]]' data-page-length='50'>
+                    <thead>
+                    <tr>
+                        <th>脚本名称</th>
+                        <th>拥有者</th>
+                        <th>脚本命令</th>
+                        <th>运行机制</th>
+                        <th>最大执行时间</th>
+                        <th>备注</th>
+                        <th>告警开关</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cronjobInfo in cronjobList %}
+                        <tr>
+                            <td><p title="{{ cronjobInfo.name }}" class="api-path-name">{{ cronjobInfo.name }}</p></td>
+                            <td>{{ ownerHash[cronjobInfo.owner] }}</td>
+                            <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
+                            <td>{% if cronjobInfo.executeCycleEnabled %} 每{{ cronjobInfo.executeCycle }}分钟执行一次 {% else %}在 {% if cronjobInfo.executePointMinute %} {{ cronjobInfo.executePointMinute }}分{% endif %} {% if cronjobInfo.executePointHour %} {{cronjobInfo.executePointHour}}小时{% endif %} {% if cronjobInfo.executePointDay %} {{cronjobInfo.executePointDay}}日{% endif %} {% if cronjobInfo.executePointMonth %} {{cronjobInfo.executePointMonth}}月{% endif %} {% if cronjobInfo.executePointWeek %} {{cronjobInfo.executePointWeek}}周{% endif %}执行{% endif %}</td>
+                            <td>{{ cronjobInfo.maxExecuteTime }}分钟</td>
+                            <td>{{ cronjobInfo.note }}</td>
+                            <td>{{ msgSwitchFlagHash[cronjobInfo.msgSwitchFlag]['label'] }}</td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <table id="table_cronjob_list" class="table table-striped" data-order='[[ 3, "desc" ]]' data-page-length='50'>
-        <thead>
-        <tr>
-            <th>脚本名称</th>
-            <th>脚本参数</th>
-            <th>脚本信息</th>
-            <th>启动时间</th>
-            <th>结束时间</th>
-            <th>耗时s</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for cronjobInfo in  cronjobList %}
-            <tr>
-                <td><p title="{{ cronjobInfo.name }}" class="api-path-name">{{ cronjobInfo.name }}</p></td>
 
-                <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
-                <td><textarea disabled="disabled">{{ cronjobInfo.msg }}</textarea></td>
-                <td>{{ cronjobInfo.startTime|date('Y-m-d H:i:s') }}</td>
-                <td>{{ cronjobInfo.stopTime|date('Y-m-d H:i:s') }}</td>
-                <td>{{ cronjobInfo.cost }}</td>
-                <td><p class="{{ codeHash[cronjobInfo.code]['color'] }}">{{ codeHash[cronjobInfo.code]['label'] }}</p></td>
-                <td></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}
 
 {% block javascripts %}

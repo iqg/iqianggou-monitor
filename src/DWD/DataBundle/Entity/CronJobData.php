@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class CronJobData
  * @package DWD\DataBundle\Entity
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CronJobDataRepository")
  * @ORM\Table(name="cronjob_data",
  *      indexes={
  *          @ORM\Index(name="code", columns={"code"}),

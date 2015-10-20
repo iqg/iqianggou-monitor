@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MonitorCronJobController extends Controller
 {
-    protected $codeHash = array( '0' => array( 'color' => 'text-success', 'label' => '成功' ), '99' => array( 'color' => 'text-danger', 'label' => '失败' ), '98' => array( 'color' => 'text-warning', 'label' => '超时' ), "" => array( 'color' => 'text-muted', 'label' => '未执行' ) );
-    protected $_default_time_interval = 86400;
+    protected $_default_time_interval = 5184000;
 
     /**
      * Uri list of Analyse statistics
@@ -38,36 +37,20 @@ class MonitorCronJobController extends Controller
         $code = $request->get('status');
         $owner = $request->get('owner');
 
-        $em = $this->getDoctrine()->getManager();
-        $qb = $em->createQueryBuilder();
-        $qb
-            ->select('cd')
-            ->from('DWD\DataBundle\Entity\CronJobData', 'cd')
-            ->where('cd.startTime >= :startTime')
-            ->andWhere('cd.startTime <= :endTime')
-            ->setParameter('startTime', $startTime)
-            ->setParameter('endTime', $endTime);
-        if (isset($code) && $code != '') {
-            $qb
-                ->andWhere('cd.code = :code')
-                ->setParameter('code', $code);
-        }
-        if (isset($owner) && $owner != '') {
-            $qb
-                ->leftJoin("cd.cronjob", 'c')
-                ->andWhere('c.owner = :owner')
-                ->setParameter('owner', $owner);
-        }
+        $cronjobDataRepository = $this->getDoctrine()->getRepository('DWDDataBundle:CronJobData');
+        $cronjobDataList = $cronjobDataRepository->getCronJobDataList( $startTime, $endTime, $code, $owner );
 
-        $cronjobList = $qb->getQuery()->getArrayResult();
+        $cronjobRepository = $this->getDoctrine()->getRepository('DWDDataBundle:CronJob');
+        $cronjobList = $cronjobRepository->findAll();
 
         return $this->render('DWDTongjiBundle:Analyse:cronjob_list.html.twig', array(
             'cronjobList'       => $cronjobList,
-            'codeHash'          => $this->codeHash,
+            'cronjobDataList'   => $cronjobDataList,
             'startTime'         => $startTime,
             'endTime'           => $endTime,
             'code'              => $code,
-            'owner'             => $owner
+            'owner'             => $owner,
+            'subject'           => 'tongji_monitor_cronjob'
         ));
     }
 }

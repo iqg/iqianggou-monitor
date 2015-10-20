@@ -49,7 +49,8 @@ class AnalyseController extends Controller
         return $this->render('DWDTongjiBundle:Analyse:api_list.html.twig', array(
             'apiList'       => $apiList,
             'title'         => date('Y-m-d', $startTimestamp) . ' API访问',
-            'startTimestamp' => $startTimestamp
+            'startTimestamp' => $startTimestamp,
+            'subject' => 'tongji_analyse'
         ));
     }
 
@@ -220,7 +221,8 @@ class AnalyseController extends Controller
             'chart'        => $ob,
             'currentTimestamp' => $currentTimestamp,
             'uri'          => $uri,
-            'regionId'     => $regionId
+            'regionId'     => $regionId,
+            'subject' => 'tongji_analyse'
         ));
     }
 }

@@ -67,19 +67,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for cronjobInfo in cronjobDataList %}
-                        <tr>
-                            <td><p title="{{ cronjobInfo.name }}" class="api-path-name">{{ cronjobInfo.name }}</p></td>
-
-                            <td><textarea disabled="disabled">{{ cronjobInfo.job }}</textarea></td>
-                            <td><textarea disabled="disabled">{{ cronjobInfo.msg }}</textarea></td>
-                            <td>{% if cronjobInfo.startTime != '' %}{{ cronjobInfo.startTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{% if cronjobInfo.stopTime != '' %}{{ cronjobInfo.stopTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{{ cronjobInfo.cost }}</td>
-                            <td><p class="{{ codeHash[cronjobInfo.code]['color'] }}">{{ codeHash[cronjobInfo.code]['label'] }}</p></td>
-                            <td></td>
-                        </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -124,9 +111,16 @@
     <script src="{{ asset('bundles/dwdtongji/js/jquery.dataTables.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready( function () {
+            var dwd_tongji_code_hash = {{ codeHash|json_encode|raw }};
+            var dwd_tongji_monitor_cronjobs_show_uri = "{{ path('dwd_tongji_monitor_cronjobs_show', { 'startTime': startTime, 'endTime': endTime, 'code': code, 'owner': owner }) }}".replace(/&amp;/g, '&');
 
             $('#table_cronjob_list').DataTable({
-                "language" : {
+                "sAjaxSource": dwd_tongji_monitor_cronjobs_show_uri,
+                "bProcessing": true,
+                "bStateSave": true,
+                "bFilter": true,
+                "bServerSide":  true,
+                "oLanguage" : {
                     sProcessing: "处理中...",
                     sLengthMenu: "显示 _MENU_ 项结果",
                     sZeroRecords: "没有匹配结果",
@@ -148,8 +142,56 @@
                     oAria: {
                         sSortAscending: ": 以升序排列此列",
                         sSortDescending: ": 以降序排列此列"
+                    },
+                },
+                "aoColumns": [
+                    {"mData": 'name'},
+                    {"mData": 'job'},
+                    {"mData": 'msg'},
+                    {"mData": 'startTime'},
+                    {"mData": 'stopTime'},
+                    {"mData": 'cost'},
+                    {"mData": 'code'},
+                    {"mData": null, "sDefaultContent": ""}
+                ],
+                "aoColumnDefs": [
+                    {
+                        "aTargets": [ 0 ],
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html('<p title="' + sData + '" class="api-path-name">' + sData + '</p>');
+                        }
+                    },
+                    {
+                        "aTargets": [ 1, 2 ],
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html('<textarea disabled="disabled">' + sData + '</textarea>');
+                        }
+                    },
+                    {
+                        "aTargets": [ 3, 4 ],
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            var unixTimestamp = new Date(sData * 1000);
+                            commonTime = unixTimestamp.toLocaleString();
+                            $(nTd).html(commonTime);
+                        }
+                    },
+                    {
+                        "aTargets": [ 6 ],
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData == null) {
+                                sData = '';
+                            }
+                            var key = sData.toString();
+                            var color = dwd_tongji_code_hash[key].color;
+                            var label = dwd_tongji_code_hash[key].label;
+                            $(nTd).html('<p class="' + color + '">' + label + '</p>');
+                        }
+                    },
+                    {
+                        "bSortable": false,
+                        "aTargets": [ 0, 1, 2, 4, 6, 7 ]
                     }
-                }
+                ]
             });
         } );
 

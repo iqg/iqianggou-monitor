@@ -41,5 +41,6 @@ security:
     access_control:
         # this is a catch-all for the admin area
         # additional security lives in the controllers
+        - { path: ^/analyse/app/report, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_ADMIN }

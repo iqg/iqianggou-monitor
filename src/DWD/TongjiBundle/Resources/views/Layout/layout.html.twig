@@ -25,7 +25,7 @@
                 <div class="navbar navbar-default navbar-static-top" role="navigation">
                     <div class="container">
                         <div class="navbar-header">
-                            <a class="navbar-brand" href="{{ path('dwd_tongji_analyse_dashboard') }}">
+                            <a class="navbar-brand" href="{{ path('dwd_tongji_analyse_iqg_dashboard') }}">
                                 多维度启明系统
                             </a>
 
@@ -43,8 +43,9 @@
                                     <ul class="nav navbar-nav navbar-right">
 
                                         {% if app.user %}
-                                            <li {% if subject == 'tongji_analyse' %}class="active"{% endif %}><a href="{{ path('dwd_tongji_analyse_dashboard') }}">接口监控</a></li>
-                                            <li {% if subject == 'tongji_monitor_cronjob' %}class="active"{% endif %}><a href="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}">脚本监控</a></li>
+                                            <li {% if subject == 'tongji_analyse_iqg' %}class="active"{% endif %}><a href="{{ path('dwd_tongji_analyse_iqg_dashboard') }}">爱抢购接口监控</a></li>
+                                            <li {% if subject == 'tongji_analyse_hsq' %}class="active"{% endif %}><a href="{{ path('dwd_tongji_analyse_hsq_dashboard') }}">好食期接口监控</a></li>
+                                            <li {% if subject == 'tongji_monitor_cronjob' %}class="active"{% endif %}><a href="{{ path('dwd_tongji_monitor_cronjob_dashboard') }}">爱抢购脚本监控</a></li>
 
                                             <li>
                                                 <a href="{{ path('dwd_tongji_logout') }}">

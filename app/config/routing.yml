@@ -9,4 +9,4 @@ dwd_data:
 
 homepage:
     pattern:    /
-    defaults: { _controller: DWDTongjiBundle:Analyse:index }
+    defaults: { _controller: DWDTongjiBundle:IqgAnalyse:index }

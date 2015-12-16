@@ -11,16 +11,16 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
 /**
- * Class AnalyseController
+ * Class IqgAnalyseController
  * @package DWD\TongjiBundle\Controller
- * @Route("/analyse/api")
+ * @Route("/analyse/api/iqg")
  */
-class AnalyseController extends Controller
+class IqgAnalyseController extends Controller
 {
     /**
      * Uri list of Analyse statistics
      *
-     * @Route("/",name="dwd_tongji_analyse_dashboard")
+     * @Route("/",name="dwd_tongji_analyse_iqg_dashboard")
      */
     public function indexAction(Request $request)
     {
@@ -50,14 +50,15 @@ class AnalyseController extends Controller
             'apiList'       => $apiList,
             'title'         => date('Y-m-d', $startTimestamp) . ' API访问',
             'startTimestamp' => $startTimestamp,
-            'subject' => 'tongji_analyse'
+            'subject'       => 'tongji_analyse_iqg',
+            'project'       => 'iqg',
         ));
     }
 
     /**
      * Uri chart of Analyse statistics
      *
-     * @Route("/urichart",name="dwd_tongji_analyse_dashboard_urichart")
+     * @Route("/urichart",name="dwd_tongji_analyse_iqg_dashboard_urichart")
      */
     public function showUriChartAction(Request $request)
     {
@@ -83,11 +84,11 @@ class AnalyseController extends Controller
         if ($type == 'day') {
             $oal = $mongoConn->selectCollection('openapi_access_data');
             $apiCursor = $oal->find([
-               'path' => $uri,
-               'startTimestamp' => [
-                   '$gte' => $startTimestamp,
-                   '$lte' => $endTimestamp
-               ]
+                'path' => $uri,
+                'startTimestamp' => [
+                    '$gte' => $startTimestamp,
+                    '$lte' => $endTimestamp
+                ]
             ])->sort(['startTimestamp' => 1]);
             foreach ($apiCursor as $doc) {
                 if ($doc['totalCost'] < 0) {
@@ -222,7 +223,8 @@ class AnalyseController extends Controller
             'currentTimestamp' => $currentTimestamp,
             'uri'          => $uri,
             'regionId'     => $regionId,
-            'subject' => 'tongji_analyse'
+            'subject' => 'tongji_analyse_iqg',
+            'project' => 'iqg',
         ));
     }
 }

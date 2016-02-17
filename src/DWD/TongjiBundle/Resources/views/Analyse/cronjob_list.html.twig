@@ -170,9 +170,11 @@
                     {
                         "aTargets": [ 3, 4 ],
                         "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                            var unixTimestamp = new Date(sData * 1000);
-                            commonTime = unixTimestamp.toLocaleString();
-                            $(nTd).html(commonTime);
+                            if( sData ) {
+                                var unixTimestamp = new Date(sData * 1000);
+                                commonTime = unixTimestamp.toLocaleString();
+                                $(nTd).html(commonTime);
+                            }
                         }
                     },
                     {

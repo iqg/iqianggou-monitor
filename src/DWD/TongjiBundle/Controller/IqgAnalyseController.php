@@ -27,7 +27,7 @@ class IqgAnalyseController extends Controller
         $date = $request->get('date');
 
         $dm = $this->get('doctrine_mongodb')->getManager();
-        $mongoConn = $dm->getConnection()->getMongo()->selectDB('iqianggou_analyse');
+        $mongoConn = $dm->getConnection()->getMongo()->selectDB($this->container->getParameter('database_mongo_prod_db'));
         $oal = $mongoConn->selectCollection('openapi_access_data');
 
         if (isset($date) && !empty($date)) {
@@ -70,7 +70,7 @@ class IqgAnalyseController extends Controller
         $regionId = $request->get('regionId');
 
         $dm = $this->get('doctrine_mongodb')->getManager();
-        $mongoConn = $dm->getConnection()->getMongo()->selectDB('iqianggou_analyse');
+        $mongoConn = $dm->getConnection()->getMongo()->selectDB($this->container->getParameter('database_mongo_prod_db'));
 
         $calledArray = array();
         $costArray = array();

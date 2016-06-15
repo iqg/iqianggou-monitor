@@ -24,3 +24,4 @@ parameters:
     database_mongo_prod_db: iqianggou_analyse
     cookie_domain: ~
     cookie_lifetime: 315360000 #10 years
+

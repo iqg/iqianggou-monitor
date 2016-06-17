@@ -1,0 +1,52 @@
+#!/bin/bash
+ 
+# config
+RSYNC=/usr/bin/rsync
+SSH=/usr/bin/ssh
+SSHPASS=/usr/bin/sshpass
+PASSWORD=52df6c775c5ab791
+USER=work
+PORT=22
+REMOTE_DIR=/data/www/iqg.com/current/app/logs/
+#internalapi
+#INTERNALAPI_REMOTE_DIR=/data/www/internal_api.com/shared/logs/
+INTERNALAPI_REMOTE_DIR=/data/www/internal_api.com/shared/logs/iqg_access_internal_api.log.20160613
+
+ 
+HOST1=120.27.143.154
+HOST2=114.55.86.65
+# HOST3=114.55.86.62
+HOST4=114.55.86.32
+HOST5=114.55.38.248
+HOST6=114.55.86.62
+HOST7=114.55.86.92
+HOST8=114.55.86.80
+
+HOST1=120.27.143.154
+HOST2=114.55.86.65
+# HOST3=120.27.192.210
+HOST4=114.55.86.32
+HOST5=114.55.38.248
+HOST6=114.55.86.62
+HOST7=114.55.86.92
+HOST8=114.55.86.80
+
+LOCAL_DIR1=/ace/log/iqg/api_server1/
+LOCAL_DIR2=/ace/log/iqg/api_server2/
+#LOCAL_DIR3=/ace/log/iqg/api_server3/
+LOCAL_DIR4=/ace/log/iqg/api_server4/
+LOCAL_DIR5=/ace/log/iqg/api_server5/
+LOCAL_DIR6=/ace/log/iqg/api_server6/
+LOCAL_DIR7=/ace/log/iqg/api_server7/
+LOCAL_DIR8=/ace/log/iqg/api_server8/
+
+
+# rsync+ssh+crontab command
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST1:$REMOTE_DIR $LOCAL_DIR1
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST2:$REMOTE_DIR $LOCAL_DIR2
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST3:$REMOTE_DIR $LOCAL_DIR3
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST4:$REMOTE_DIR $LOCAL_DIR4
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST5:$REMOTE_DIR $LOCAL_DIR5
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST6:$REMOTE_DIR $LOCAL_DIR6
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST7:$REMOTE_DIR $LOCAL_DIR7
+#$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST7:$REMOTE_DIR $LOCAL_DIR7

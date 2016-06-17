@@ -13,7 +13,7 @@ class InternalAccessLogParse
 	private $_serverIp = '127.0.0.1';
 	private $_validHost = array( 'internalapi.iqianggou.dev.lab:12306' );
 	private $_serverId = 0;
-	private $_config;
+	public   $_config;
 
 	function __construct()
 	{
@@ -59,7 +59,6 @@ class InternalAccessLogParse
 		if (0 != $this->_serverId) {
 			$this->_data['server_ip'] = $this->_config['server_ip']['server' . $this->_serverId];
 		}
-//        var_dump($this->_data);exit;
 		return true;
 	}
 
@@ -76,11 +75,11 @@ class InternalAccessLogParse
 	public function SetSubjectPath( $subServerFile )
 	{
         try{
-		if (preg_match('/[a-zA-Z_]+([0-9]+)/', $subServerFile, $matches)) {
-			$this->_serverId = intval($matches[1]);
-		}
-		$this->_subjectPath = $this->_subjectParentPath . ($subServerFile . '/');
-//            var_dump($this->_subjectPath,$this->_serverId);
+    //		if (preg_match('/[a-zA-Z_]+([0-9]+)/', $subServerFile, $matches)) {
+    //			$this->_serverId = intval($matches[1]);
+    //		}
+            $this->_subjectPath = $this->_subjectParentPath . ($subServerFile . '/');
+//                var_dump($this->_subjectPath,$this->_serverId);exit;
         }catch ( Exception $e){
             var_dump($e->getMessage());
         }
@@ -126,7 +125,7 @@ class InternalAccessLogParse
 	public function RunYesterdayLog()
 	{
 		$fileName 		= $this->GetYesterdayLogFile();
-        var_dump($fileName);
+        var_dump('internal_api解析的文件: ' . $fileName);
 		$this->RunAction($fileName);
 	}
 
@@ -135,8 +134,7 @@ class InternalAccessLogParse
 try{
 	$startTime = time();
 
-	$job =  __dir__ . '/' . implode(" ", $argv);
-
+//	$job =  __dir__ . '/' . implode(" ", $argv);
 //	$tool =  new Tool();
 //	$tool->SetStartTime( $startTime );
 //	$tool->SetJob( $job );
@@ -144,17 +142,16 @@ try{
 
     $internalAccessLogParse = new InternalAccessLogParse();
 
-	foreach ( $argv as $key => $value ) {
-		if ( $key == 0 ) {
-			continue;
-		}
+    $serverIpArr = $internalAccessLogParse->_config['server_ip'];
+	foreach ( $serverIpArr as $key => $value ) {
+
         var_dump('处理第几台服务器====>' .$value);
         $internalAccessLogParse->SetSubjectPath($value);
         $internalAccessLogParse->RunYesterdayLog();
 	}
 
     $totalTime = time() - $startTime;
-     var_dump('总得处理时间:'. $totalTime);
+     var_dump('总的处理时间:'. $totalTime);
 //	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON('', 0));
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());

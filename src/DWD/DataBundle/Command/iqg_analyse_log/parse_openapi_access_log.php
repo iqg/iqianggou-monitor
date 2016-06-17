@@ -10,10 +10,11 @@ class AccessLogParse
 	private $_subject = 'access';
 	private $_subjectParentPath = '';
 	private $_subjectPath = '';
+	private $_subjectLastPath = '';
 	private $_serverIp = '127.0.0.1';
 	private $_validHost = array( 'api.v3.iqianggou.com', 'm.iqianggou.com' );
 	private $_serverId = 0;
-	private $_config;
+	public  $_config;
 
 	function __construct()
 	{
@@ -21,6 +22,7 @@ class AccessLogParse
 		$this->_subject = $this->_config['openapi_access']['prefix_file_name'];
 		$this->_subjectParentPath = $this->_config['common']['subject_path'];
 		$this->_serverIp = $this->_config['common']['server_ip'];
+		$this->_subjectLastPath = $this->_config['openapi_access']['last_path'];
 
 		$this->connectMongo($this->_config['mongo']['server'], $this->_config['mongo']['db_name']);
 	}
@@ -98,7 +100,8 @@ class AccessLogParse
 		if (preg_match('/[a-zA-Z_]+([0-9]+)/', $subServerFile, $matches)) {
 			$this->_serverId = intval($matches[1]);
 		}
-		$this->_subjectPath = $this->_subjectParentPath . ($subServerFile . '/');
+		$this->_subjectPath = $this->_subjectParentPath . $subServerFile . '/'. $this->_subjectLastPath ;
+
 	}
 
 	public function SaveRequestInfo()
@@ -115,7 +118,7 @@ class AccessLogParse
 			exit('读取文件异常,系统退出');
 		}
 
-		echo "Start parse OpenAPI access log[" . $fileName . "] at" . date('Y-m-d H:i:s') . "\n";
+		echo "Start parse OpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
 
 		while( !feof( $fp ) ) 
 		{ 
@@ -129,7 +132,7 @@ class AccessLogParse
 			}
 		}
 
-		echo "End parse OpenAPI access log[" . $fileName . "] at" . date('Y-m-d H:i:s') . "\n";
+		echo "End parse OpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
 
 		fclose( $fp );	
 	}
@@ -137,6 +140,7 @@ class AccessLogParse
 	public function RunYesterdayLog()
 	{
 		$fileName 		= $this->GetYesterdayLogFile();
+         var_dump('解析的文件: ' . $fileName);
 		$this->RunAction($fileName);
 	}
 
@@ -162,21 +166,24 @@ class AccessLogParse
 
 try{
 	$startTime = time();
-	$job =  __dir__ . '/' . implode(" ", $argv);
-	$tool =  new Tool();
-	$tool->SetStartTime( $startTime );
-	$tool->SetJob( $job );
-	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogBootstrapJSON('', 0));
+//	$job =  __dir__ . '/' . implode(" ", $argv);
+//	$tool =  new Tool();
+//	$tool->SetStartTime( $startTime );
+//	$tool->SetJob( $job );
+//	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogBootstrapJSON('', 0));
 
 	$accessLogParse = new AccessLogParse();
 
-	foreach ( $argv as $key => $value ) {
-		if ( $key == 0 ) {
-			continue;
-		}
+    $serverIpArr = $accessLogParse->_config['server_ip'];
+//    var_dump($serverIpArr);exit;
+	foreach ( $serverIpArr as $key => $value ) {
+        var_dump('处理第几台服务器====>' .$value);
 		$accessLogParse->SetSubjectPath($value);
 		$accessLogParse->RunYesterdayLog();
 	}
+
+    $totalTime = time() - $startTime;
+    var_dump('总的处理时间:'. $totalTime);
 
 	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON('', 0));
 } catch (Exception $e) {

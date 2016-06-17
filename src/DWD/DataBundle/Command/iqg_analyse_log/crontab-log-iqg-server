@@ -8,19 +8,6 @@ PASSWORD=52df6c775c5ab791
 USER=work
 PORT=22
 REMOTE_DIR=/data/www/iqg.com/current/app/logs/
-#internalapi
-#INTERNALAPI_REMOTE_DIR=/data/www/internal_api.com/shared/logs/
-INTERNALAPI_REMOTE_DIR=/data/www/internal_api.com/shared/logs/iqg_access_internal_api.log.20160613
-
- 
-HOST1=120.27.143.154
-HOST2=114.55.86.65
-# HOST3=114.55.86.62
-HOST4=114.55.86.32
-HOST5=114.55.38.248
-HOST6=114.55.86.62
-HOST7=114.55.86.92
-HOST8=114.55.86.80
 
 HOST1=120.27.143.154
 HOST2=114.55.86.65
@@ -31,15 +18,18 @@ HOST6=114.55.86.62
 HOST7=114.55.86.92
 HOST8=114.55.86.80
 
-LOCAL_DIR1=/ace/log/iqg/api_server1/
-LOCAL_DIR2=/ace/log/iqg/api_server2/
-#LOCAL_DIR3=/ace/log/iqg/api_server3/
-LOCAL_DIR4=/ace/log/iqg/api_server4/
-LOCAL_DIR5=/ace/log/iqg/api_server5/
-LOCAL_DIR6=/ace/log/iqg/api_server6/
-LOCAL_DIR7=/ace/log/iqg/api_server7/
-LOCAL_DIR8=/ace/log/iqg/api_server8/
+LOCAL_BASE=/data/logs/iqg-api    #目前因为在好时期数据已经同步了，改脚本可以不用执行
 
+LOCAL_DIR1=$LOCAL_BASE/HOST1/
+LOCAL_DIR2=$LOCAL_BASE/HOST2/
+#LOCAL_DIR3=$LOCAL_BASE/HOST3/
+LOCAL_DIR4=$LOCAL_BASE/HOST4/
+LOCAL_DIR5=$LOCAL_BASE/HOST5/
+LOCAL_DIR6=$LOCAL_BASE/HOST6/
+LOCAL_DIR7=$LOCAL_BASE/HOST7/
+LOCAL_DIR8=$LOCAL_BASE/HOST8/
+
+echo $LOCAL_DIR8
 
 # rsync+ssh+crontab command
 #$RSYNC -avz -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST1:$REMOTE_DIR $LOCAL_DIR1

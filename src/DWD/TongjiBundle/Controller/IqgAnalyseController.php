@@ -42,12 +42,14 @@ class IqgAnalyseController extends Controller
         ])->sort(['called' => -1]);
         $apiList = iterator_to_array($apiDataCursor);
 
-//        $response = new Response();
-//        $response->setContent(json_encode($apiList));
-//        return $response;
+        $sumCall = 0;
+        foreach($apiList as $key => $val) {
+            $sumCall +=  $val['called'];
+        }
 
         return $this->render('DWDTongjiBundle:Analyse:api_list.html.twig', array(
             'apiList'       => $apiList,
+            'sumCall'       => $sumCall,
             'title'         => date('Y-m-d', $startTimestamp) . ' API访问',
             'startTimestamp' => $startTimestamp,
             'subject'       => 'tongji_analyse_iqg',

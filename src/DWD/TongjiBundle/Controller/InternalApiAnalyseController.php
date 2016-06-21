@@ -11,16 +11,16 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
 use Zend\Json\Expr;
 
 /**
- * Class HsqAnalyseController
+ * Class IqgAnalyseController
  * @package DWD\TongjiBundle\Controller
- * @Route("/analyse/api/hsq_openapi")
+ * @Route("/analyse/api/internalapi")
  */
-class HsqOpenAPIAnalyseController extends Controller
+class InternalApiAnalyseController extends Controller
 {
     /**
      * Uri list of Analyse statistics
      *
-     * @Route("/",name="dwd_tongji_analyse_hsq_openapi_dashboard")
+     * @Route("/",name="dwd_tongji_analyse_iqg_internalapi_dashboard")
      */
     public function indexAction(Request $request)
     {
@@ -28,7 +28,7 @@ class HsqOpenAPIAnalyseController extends Controller
 
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mongoConn = $dm->getConnection()->getMongo()->selectDB($this->container->getParameter('database_mongo_prod_db'));
-        $oal = $mongoConn->selectCollection('hsq_open_api_data');
+        $oal = $mongoConn->selectCollection('internalapi_access_data');
 
         if (isset($date) && !empty($date)) {
             $startTimestamp = strtotime($date);
@@ -36,6 +36,7 @@ class HsqOpenAPIAnalyseController extends Controller
             $lastRecord = $oal->find()->sort(['startTimestamp' => -1])->limit(1)->getNext();
             $startTimestamp = $lastRecord['startTimestamp'];
         }
+
         $apiDataCursor = $oal->find([
             'startTimestamp' => $startTimestamp,
         ])->sort(['called' => -1]);
@@ -46,21 +47,20 @@ class HsqOpenAPIAnalyseController extends Controller
             $sumCall +=  $val['called'];
         }
 
-
         return $this->render('DWDTongjiBundle:Analyse:api_list.html.twig', array(
             'apiList'       => $apiList,
             'sumCall'       => $sumCall,
             'title'         => date('Y-m-d', $startTimestamp) . ' API访问',
             'startTimestamp' => $startTimestamp,
-            'subject' => 'tongji_analyse_hsq_openapi',
-            'project' => 'hsq_openapi',
+            'subject'       => 'tongji_analyse_iqg_internalapi',
+            'project'       => 'iqg_internalapi',
         ));
     }
 
     /**
      * Uri chart of Analyse statistics
      *
-     * @Route("/urichart",name="dwd_tongji_analyse_hsq_openapi_dashboard_urichart")
+     * @Route("/urichart",name="dwd_tongji_analyse_iqg_internalapi_dashboard_urichart")
      */
     public function showUriChartAction(Request $request)
     {
@@ -84,13 +84,13 @@ class HsqOpenAPIAnalyseController extends Controller
         $dataCount = ($endTimestamp - $startTimestamp)/$duration;
 
         if ($type == 'day') {
-            $oal = $mongoConn->selectCollection('hsq_open_api_data');
+            $oal = $mongoConn->selectCollection('internalapi_access_data');
             $apiCursor = $oal->find([
-               'path' => $uri,
-               'startTimestamp' => [
-                   '$gte' => $startTimestamp,
-                   '$lte' => $endTimestamp
-               ]
+                'path' => $uri,
+                'startTimestamp' => [
+                    '$gte' => $startTimestamp,
+                    '$lte' => $endTimestamp
+                ]
             ])->sort(['startTimestamp' => 1]);
             foreach ($apiCursor as $doc) {
                 if ($doc['totalCost'] < 0) {
@@ -103,7 +103,7 @@ class HsqOpenAPIAnalyseController extends Controller
             }
             $currentTimestamp = $endTimestamp;
         } else {
-            $oal = $mongoConn->selectCollection('openapi_access_logs');
+            $oal = $mongoConn->selectCollection('internalapi_access_logs');
 
             for ( $i = 0; $i < $dataCount; $i ++ ) {
                 $requestCursor = $oal->find([
@@ -225,8 +225,8 @@ class HsqOpenAPIAnalyseController extends Controller
             'currentTimestamp' => $currentTimestamp,
             'uri'          => $uri,
             'regionId'     => $regionId,
-            'subject' => 'tongji_analyse_hsq_openapi',
-            'project' => 'hsq_openapi',
+            'subject' => 'tongji_analyse_iqg_internalapi',
+            'project' => 'iqg_internalapi',
         ));
     }
 }

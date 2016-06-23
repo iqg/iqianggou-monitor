@@ -15,7 +15,4 @@
 composer.lock
 
 #cap
-/app/config/deploy.rb
-/app/config/deploy_stage/
-Capfile
 /web/upload

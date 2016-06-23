@@ -134,6 +134,7 @@ class InternalApiStatus
     //入口,从mogodb里取得数据
 	public function GetApiStatus( $startTime = null, $endTime = null, $saveFlag = false )
 	{
+        print_r('开始时间' .$startTime);
 		$coll = $this->_connection->internalapi_access_logs;
 		$query = array();
 		if (isset( $startTime )) {
@@ -155,6 +156,7 @@ class InternalApiStatus
 		} else {
 			$this->Output();
 		}
+        echo '执行结束';
 		$this->DropApiAccessLogs();
 	}
 
@@ -173,7 +175,7 @@ try{
     $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
     //$apiStatus->GetApiStatus( "2015-09-16", "2015-09-17" );
     $totalTime = time() - $startTime;
-    var_dump('总得处理时间:'. $totalTime);
+    var_dump('生成正式数据总的处理时间:'. $totalTime);
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());
 }

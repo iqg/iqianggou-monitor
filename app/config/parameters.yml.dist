@@ -17,3 +17,11 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    locale: en
+    redis_dsn: 'redis://10.0.0.10:6379'
+    database_mongo_prod_uri: '10.0.0.10:27017'
+    database_mongo_prod_db: iqianggou_analyse
+    cookie_domain: ~
+    cookie_lifetime: 315360000 #10 years
+

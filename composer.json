@@ -69,5 +69,11 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
+    },
+    "repositories": {
+      "packagist": {
+        "type": "composer",
+        "url": "https://packagist.phpcomposer.com"
+      }
     }
 }

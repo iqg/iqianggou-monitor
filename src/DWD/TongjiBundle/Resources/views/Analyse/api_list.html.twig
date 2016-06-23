@@ -33,6 +33,7 @@
         </tr>
         </thead>
         <tbody>
+
         {% for apiInfo in apiList %}
         <tr>
             <td><p title="{{ apiInfo.path }}" class="api-path-name">{{ apiInfo.path }}</p></td>
@@ -49,6 +50,7 @@
             </td>
         </tr>
         {% endfor %}
+
         </tbody>
     </table>
 {% endblock %}
@@ -66,8 +68,8 @@
                     sProcessing: "处理中...",
                     sLengthMenu: "显示 _MENU_ 项结果",
                     sZeroRecords: "没有匹配结果",
-                    sInfo: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    sInfoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                    sInfo: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项,共 {{ sumCall  }} 请求　",
+                    sInfoEmpty: "显示第 0 至 0 项结果，共 0 项,共 0 请求",
                     sInfoFiltered: "(由 _MAX_ 项结果过滤)",
                     sInfoPostFix: "",
                     sSearch: "搜索:",

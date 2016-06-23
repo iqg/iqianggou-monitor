@@ -145,9 +145,12 @@ try{
     $serverIpArr = $internalAccessLogParse->_config['server_ip'];
 	foreach ( $serverIpArr as $key => $value ) {
 
+        $start = time();
         var_dump('处理第几台服务器====>' .$value);
         $internalAccessLogParse->SetSubjectPath($value);
         $internalAccessLogParse->RunYesterdayLog();
+        $totalt = time() - $start;
+        var_dump($value .'　服务器处理时间:'. $totalt);
 	}
 
     $totalTime = time() - $startTime;

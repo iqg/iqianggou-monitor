@@ -1,0 +1,111 @@
+{% extends "DWDTongjiBundle:Layout:layout.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/dwdtongji/css/bootstrap-datetimepicker.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/dwdtongji/css/jquery.dataTables.min.css') }}" />
+
+{% endblock %}
+
+{% block body %}
+    <h1>{{ title }}</h1>
+    <form action="{{ path('dwd_tongji_analyse_'~project~'_dashboard') }}" method="post">
+        <div class="form-group col-md-5 fr">
+            <label for="dtp_input2" class="col-md-3 control-label">选择日期</label>
+            <div class="input-group date form_date col-md-6 dwd-datepicker" data-date="" data-date-format="yyyy年mm月dd日" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                <input class="form-control" size="16" type="text" value="" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <input type="hidden" id="dtp_input2" name="date" value="" />
+            <button class="btn btn-primary" type="submit" style="margin: 0 0 0 10px;">搜索</button>
+        </div>
+    </form>
+    <table id="table_api_list" class="table table-striped" data-order='[[ 1, "asc" ]]' data-page-length='100'>
+        <thead>
+        <tr>
+            <th>访问地址</th>
+            <th style="display: none">显示顺序</th>
+            <th>网络环境</th>
+            <th>访问次数</th>
+            <th>最大耗时ms</th>
+            <th>最小耗时ms</th>
+            <th>平均耗时ms</th>
+            <th>调用成功</th>
+            <th>调用失败</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for apiInfo in apiList %}
+        <tr>
+            <td><p title="{{ apiInfo.path }}" class="api-path-name">{{ apiInfo.path }}</p></td>
+            <td style="display: none">{{ apiInfo.sortShow }}</td>
+            <td>{{ apiInfo.network }}</td>
+            <td>{{ apiInfo.called }}</td>
+            <td>{{ apiInfo.maxCost|round(2) }}</td>
+            <td>{{ apiInfo.minCost|round(2) }}</td>
+            <td>{{ (apiInfo.totalCost/apiInfo.called)|round(2) }}</td>
+            <td>{{ apiInfo.successed }}</td>
+            <td>{{ apiInfo.failed }}</td>
+            <td>
+                <a href="{{ path('dwd_tongji_analyse_'~project ~'_dashboard_urichart', { uri: apiInfo.path, type: 'day', startTime: startTimestamp - 86400*6, endTime: startTimestamp, duration: 86400, regionId : 2 }) }}"
+                   class="btn btn-sm btn-default" target="_blank">
+                    查看历史趋势图
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script src="{{ asset('bundles/dwdtongji/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/dwdtongji/js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
+    <script src="{{ asset('bundles/dwdtongji/js/jquery.dataTables.min.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#table_api_list').DataTable({
+                "language" : {
+                    sProcessing: "处理中...",
+                    sLengthMenu: "显示 _MENU_ 项结果",
+                    sZeroRecords: "没有匹配结果",
+                    sInfo: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项,共 {{ sumCall  }} 请求　",
+                    sInfoEmpty: "显示第 0 至 0 项结果，共 0 项,共 0 请求",
+                    sInfoFiltered: "(由 _MAX_ 项结果过滤)",
+                    sInfoPostFix: "",
+                    sSearch: "搜索:",
+                    sUrl: "",
+                    sEmptyTable: "表中数据为空",
+                    sLoadingRecords: "载入中...",
+                    sInfoThousands: ",",
+                    oPaginate: {
+                        sFirst: "首页",
+                        sPrevious: "上页",
+                        sNext: "下页",
+                        sLast: "末页"
+                    },
+                    oAria: {
+                        sSortAscending: ": 以升序排列此列",
+                        sSortDescending: ": 以降序排列此列"
+                    }
+                }
+            });
+        } );
+
+        $('.form_date').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    </script>
+{% endblock %}

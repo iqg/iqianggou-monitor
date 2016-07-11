@@ -96,22 +96,6 @@ class InternalApiStatus
 		return ($fir['called'] > $sec['called']) ? -1 : 1;
 	} 
 
-
-	public function CheckValidRequestTime( $leftRequiredTime = null, $rightRequiredTime = null )
-	{
-		if (isset( $leftRequiredTime )) {
-			$leftRequiredTime = strtotime($leftRequiredTime);
-			if ($this->requestTime < $leftRequiredTime)
-				return false;
-		}
-		if (isset( $rightRequiredTime )) {
-			$rightRequiredTime = strtotime($rightRequiredTime);
-			if ($this->requestTime > $rightRequiredTime)
-				return false;
-		}
-		return true;
-	}
-
 	public function GetYesterday()
 	{
 		return date("Y-m-d", strtotime("-1 day"));
@@ -131,6 +115,7 @@ class InternalApiStatus
 			$coll->insert( $pathInfo );
 		}
 	}
+
     //入口,从mogodb里取得数据
 	public function GetApiStatus( $startTime = null, $endTime = null, $saveFlag = false )
 	{

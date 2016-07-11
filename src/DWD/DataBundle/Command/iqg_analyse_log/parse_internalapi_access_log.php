@@ -31,7 +31,7 @@ class InternalAccessLogParse
 		$this->_connection = $m->selectDB($db_name);
 	}
 
-    //这个方法需要重写
+    //分析json数据
 	public function AnalyseRequestInfo( $requestInfo )
 	{
 		$this->_data = array();

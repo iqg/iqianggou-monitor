@@ -37,7 +37,7 @@ class ParseAppOfflineLog
 	public function AnalyseRequestInfo( $requestInfos )
 	{
 		$this->_data = [];
-//        var_dump($requestInfo);exit;
+
 		if ( empty( $requestInfos['logdata']) ) {
 			return false;
 		}

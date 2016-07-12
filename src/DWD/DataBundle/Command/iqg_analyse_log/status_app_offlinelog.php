@@ -132,13 +132,10 @@ class AppOfflineLogStatus
 		return false;
 	}
 
-	public function GetYesterday()
-	{
-		return date("Y-m-d", strtotime("-1 day"));
-	}
 
 	public function SaveApiInfo( $startTimestamp ,$mongolog)
 	{
+        echo ' time => ' . $startTimestamp . "\n" ;
         if( $mongolog == 'iqg_app_offline_logs'){
             $coll = $this->_connection->iqg_app_offline_data;
         }elseif($mongolog == 'hsq_app_offline_logs') {
@@ -159,7 +156,7 @@ class AppOfflineLogStatus
 	}
 
     //入口,从mogodb里取得数据
-	public function GetApiStatus( $startTime = null, $endTime = null, $saveFlag = false,$mongoLog )
+	public function GetApiStatus( $mongoLog )
 	{
 
         if( $mongoLog == 'iqg_app_offline_logs'){
@@ -177,7 +174,7 @@ class AppOfflineLogStatus
 			$this->AnalysisApiInfo( $requestInfo );
 		}
 
-        $this->SaveApiInfo( strtotime("-1 day"), $mongoLog);
+        $this->SaveApiInfo( strtotime(date("Y-m-d",strtotime("-1 day"))), $mongoLog);
 
         echo '处理数据结束\n';
 		$this->DropApiAccessLogs($mongoLog);
@@ -191,6 +188,7 @@ class AppOfflineLogStatus
             $coll = $this->_connection->hsq_app_offline_logs;
         }
 		$response = $coll->drop();
+        var_dump('删除数据是否成功：',$response);
 		return $response;
 	}
 }
@@ -199,7 +197,6 @@ try{
     ini_set('memory_limit','-1');
     $data = implode(" ", $argv);
     $mongoLog = trim($argv[1]);
-
     if(!in_array($mongoLog,['iqg_app_offline_logs','hsq_app_offline_logs'] )){
         print_r('参数错误，请输入 iqg_app_offline_logs , hsq_app_offline_logs  ');
         exit;
@@ -207,7 +204,7 @@ try{
 
     $startTime = time();
     $apiStatus 		= new AppOfflineLogStatus();
-    $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true,$mongoLog );
+    $apiStatus->GetApiStatus( $mongoLog );
     $totalTime = time() - $startTime;
     var_dump('生成正式数据总的处理时间:'. $totalTime);
 } catch (Exception $e) {

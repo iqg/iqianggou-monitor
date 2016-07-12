@@ -158,7 +158,6 @@ try{
     $startTime = time();
     $apiStatus 		= new InternalApiStatus();
     $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
-    //$apiStatus->GetApiStatus( "2015-09-16", "2015-09-17" );
     $totalTime = time() - $startTime;
     var_dump('生成正式数据总的处理时间:'. $totalTime);
 } catch (Exception $e) {

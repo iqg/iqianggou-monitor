@@ -40,25 +40,18 @@ class AppOfflineLogStatus
         if( $requestInfo['cost'] <= 0 ){
             return ;
         }
-        if( !in_array($requestInfo['network'],['2G','3G'.'4G','Wi-Fi','otherNet'])  ){
+        if( !in_array($requestInfo['network'],['2G','3G','4G','Wi-Fi','otherNet'])  ){
+            echo  json_encode($requestInfo);
             return ;
         }
-
         if($requestInfo['actionId'] == 'RequestLog'){
 
             $path = $requestInfo['path'];
-            $extend  = pathinfo($path);
-
-            if( isset( $extend["extension"] ) ){
-                $extend  = strtolower($extend["extension"]);
-                if( preg_match( "/jpg|png|js|css|webp|ts/", $extend ) ){
-                    return ;
-                }
-            }
             $path    = preg_replace( "/\/\d+/", "/:id", $path );
             $path    = explode("?",$path)[0];
 
             $network = $requestInfo['network'];
+
             if( isset( $this->statusInfo[$path][$network] ) ){   //相同的接口第二次调用
                 ++ $this->statusInfo[$path][$network]['called']; //总的调用次数
                 $this->statusInfo[$path][$network]['totalCost'] += $requestInfo['cost'];
@@ -115,7 +108,7 @@ class AppOfflineLogStatus
 	}
 
     public function getSizePath( $size ){
-        $sizePath = 300;
+        $sizePath = 300; //默认300
         foreach( $this->_imagesize as $key => $val ){
             if( $val[0]< $size && $size <= $val[1] ){
                 $sizePath =  $key;
@@ -146,6 +139,7 @@ class AppOfflineLogStatus
           if(!empty($pathInfo)){
 
              foreach($pathInfo as $network => $row){
+
                 $row['startTimestamp'] = $startTimestamp;
                 $row['network'] = $network;
 

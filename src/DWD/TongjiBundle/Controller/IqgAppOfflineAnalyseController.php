@@ -71,6 +71,7 @@ class IqgAppOfflineAnalyseController extends Controller
         $duration = $request->get('duration');
         $type = $request->get('type');
         $regionId = $request->get('regionId');
+        $netWork  = $request->get('netWork');
 
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mongoConn = $dm->getConnection()->getMongo()->selectDB($this->container->getParameter('database_mongo_prod_db'));
@@ -88,6 +89,7 @@ class IqgAppOfflineAnalyseController extends Controller
             $oal = $mongoConn->selectCollection($this->_mongodb_origin);
             $apiCursor = $oal->find([
                 'path' => $uri,
+                'network' => $netWork,
                 'startTimestamp' => [
                     '$gte' => $startTimestamp,
                     '$lte' => $endTimestamp
@@ -221,11 +223,12 @@ class IqgAppOfflineAnalyseController extends Controller
         $ob->tooltip->formatter($formatter);
         $ob->series($series);
 
-        return $this->render('DWDTongjiBundle:Analyse:url_chart.html.twig', array(
+        return $this->render('DWDTongjiBundle:Analyse:app_offline_url_chart.html.twig', array(
             'chart'        => $ob,
             'currentTimestamp' => $currentTimestamp,
             'uri'          => $uri,
             'regionId'     => $regionId,
+            'netWork'     => $netWork,
             'subject' => 'tongji_analyse_iqg_app_offline',
             'project' => 'iqg_app_offline',
         ));

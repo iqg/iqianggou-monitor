@@ -49,7 +49,7 @@
             <td>{{ apiInfo.successed }}</td>
             <td>{{ apiInfo.failed }}</td>
             <td>
-                <a href="{{ path('dwd_tongji_analyse_'~project ~'_dashboard_urichart', { uri: apiInfo.path, type: 'day', startTime: startTimestamp - 86400*6, endTime: startTimestamp, duration: 86400, regionId : 2 }) }}"
+                <a href="{{ path('dwd_tongji_analyse_'~project ~'_dashboard_urichart', { uri: apiInfo.path, type: 'day', startTime: startTimestamp - 86400*6, endTime: startTimestamp, duration: 86400, regionId : 2, netWork: apiInfo.network }) }}"
                    class="btn btn-sm btn-default" target="_blank">
                     查看历史趋势图
                 </a>

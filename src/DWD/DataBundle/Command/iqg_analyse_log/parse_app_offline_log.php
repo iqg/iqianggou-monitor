@@ -56,9 +56,9 @@ class ParseAppOfflineLog
             }
         }
 
-        if( !empty($this->_data) && in_array($requestInfos['appName'],$this->_iqianggouApp)  ){
+        if( !empty($this->_data) && in_array($requestInfos['appName'],$this->_iqianggouApp) && version_compare($requestInfos['appVersion'],'4.2.0','>=') ){
             $this->SaveIQGRequestInfo();
-        }elseif(!empty($this->_data) &&  in_array($requestInfos['appName'],$this->_haoshiqiApp) ){
+        }elseif(!empty($this->_data) &&  in_array($requestInfos['appName'],$this->_haoshiqiApp) && version_compare($requestInfos['appVersion'],'1.5.0','>=') ){
             $this->SaveHSQRequestInfo();
         }
 
@@ -135,7 +135,7 @@ class ParseAppOfflineLog
 			if ($this->AnalyseRequestInfo( $requestInfo )) {
 //				$this->SaveRequestInfo();
 			}
-            $this->writeln();
+//            $this->writeln();
 		}
 
 		echo "End parse Internal_API access log [" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";

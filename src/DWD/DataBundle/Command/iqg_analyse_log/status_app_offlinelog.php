@@ -197,10 +197,11 @@ try{
     }
 
     $startTime = time();
+
     $apiStatus 		= new AppOfflineLogStatus();
     $apiStatus->GetApiStatus( $mongoLog );
-    $totalTime = time() - $startTime;
-    var_dump('生成正式数据总的处理时间:'. $totalTime);
+
+    var_dump('生成正式数据总的处理时间:'. time() - $startTime);
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());
 }

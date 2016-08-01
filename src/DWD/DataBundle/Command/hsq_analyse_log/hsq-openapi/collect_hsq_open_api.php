@@ -1,16 +1,14 @@
 <?php
-/*
- * 爱抢购 open_api接口性能分析
- *
- * */
+
 class ApiStatus
 {
-	private $statusInfo = array();// 数据量比较大
+	private $statusInfo = array();
 	public $requestTime;
 	private $_connection;
 	private $_subject = 'access';
 	private $_subjectPath = '';
 	private $_serverIp = '127.0.0.1';
+	private $_now = '';
 
 	function __construct()
 	{
@@ -18,6 +16,7 @@ class ApiStatus
 		$this->_subject = $config['status']['prefix_file_name'];
 		$this->_subjectPath = $config['common']['subject_path'];
 		$this->_serverIp = $config['common']['server_ip'];
+		$this->_now = time();
 
 		$this->connectMongo($config['mongo']['server'], $config['mongo']['db_name']);
 	}
@@ -28,27 +27,14 @@ class ApiStatus
 		$this->_connection = $m->selectDB($db_name);
 	}
 
-	public function AnalysisApiInfo( $requestInfo, $source = null )
+	public function AnalysisApiInfo( $requestInfo )
 	{
-		if ($source == 'mongo') {
-			$path = $requestInfo['path'];
-		} else {
-			$path = $requestInfo['request']['path'];
-		}
+		$path = $requestInfo['path'];
 
-		$extend  = pathinfo($path);
-		if( isset( $extend["extension"] ) ){
-			$extend  = strtolower($extend["extension"]);
-			if( preg_match( "/jpg|png|js|css|webp|ts/", $extend ) ){
-				return ;
-			}
+		if( $requestInfo['cost'] < 0 ){
+			return ;
 		}
- 
-        $path    = preg_replace( "/\/\d+/", "/:id", $path );
-
-        if( $requestInfo['cost'] < 0 ){
-        	return ;
-        }
+		$requestInfo['cost'] = round($requestInfo['cost'], 2);
 
 		if( isset( $this->statusInfo[$path] ) ){
 			++ $this->statusInfo[$path]['called'];
@@ -65,16 +51,25 @@ class ApiStatus
 			$this->statusInfo[$path]['successed']  = 0;
 			$this->statusInfo[$path]['failed']     = 0;
 		}
-		if( isset( $requestInfo['ResponseStatusCode'] ) ){
-			 $this->StatusCodeVerify( $requestInfo['ResponseStatusCode'] ) ? ++ $this->statusInfo[$path]['successed'] : ++ $this->statusInfo[$path]['failed'];
-			// ++ $this->statusInfo[$path]['successed'];
+		if( isset( $requestInfo['errno'] ) ){
+			$this->StatusCodeVerify( $requestInfo['errno'] ) ? ++ $this->statusInfo[$path]['successed'] : ++ $this->statusInfo[$path]['failed'];
 		} else {
 			++ $this->statusInfo[$path]['failed'];
-		}		
+		}
+	}
+
+	public function GetLastHour()
+	{
+		return date('Y-m-d: H:', $this->_now - 3600) . '00:00';
+	}
+
+	public function GetCurrentHour()
+	{
+		return date('Y-m-d: H:', $this->_now) . '00:00';
 	}
 
 	public function StatusCodeVerify( $code ){
-		if( intval( $code ) >= 10000 && intval( $code ) <= 10001 ){
+		if( intval( $code ) == 0 ){
 			return true;
 		}
 
@@ -101,18 +96,6 @@ class ApiStatus
 
 		return ($fir['called'] > $sec['called']) ? -1 : 1;
 	} 
-
-	public function GetRequestTime( $msg )
-	{
-		$pattern = '/^\[(.+)\] \[.+\]: \[(.+)\]/';
-		preg_match( $pattern, $msg, $matches );
-		if (count($matches) < 3) {
-			return false;
-		}
-		$currentTimestamp = strtotime( $matches[1] );
-		$this->requestTime = $currentTimestamp;
-		return $currentTimestamp;
-	}
 
 	public function CheckValidRequestTime( $leftRequiredTime = null, $rightRequiredTime = null )
 	{
@@ -141,32 +124,35 @@ class ApiStatus
 	
 	public function SaveApiInfo( $startTimestamp )
 	{
-		$coll = $this->_connection->openapi_access_data;
+		echo $startTimestamp;
+		$coll = $this->_connection->hsq_open_api_data;
 		foreach ( $this->statusInfo as $pathInfo ) {
 			$pathInfo['startTimestamp'] = $startTimestamp;
-			$coll->insert( $pathInfo );
+			if( NULL === $coll->findOne( array( 'path' => $pathInfo['path'], 'startTimestamp' => $startTimestamp ) )) {
+				$coll->insert( $pathInfo );
+			}
 		}
 	}
 
 	public function GetApiStatus( $startTime = null, $endTime = null, $saveFlag = false )
 	{
-		$coll = $this->_connection->openapi_access_logs;
+		$coll = $this->_connection->hsq_open_api_logs;
 		$query = array();
 		if (isset( $startTime )) {
 			$startTime = strtotime($startTime);
-			$query['request_time']['$gte'] = intval($startTime); 
+			$query['server.REQUEST_TIME']['$gte'] = intval($startTime);
 		}
 		if (isset( $endTime )) {
 			$endTime = strtotime($endTime);
-			$query['request_time']['$lt'] = intval($endTime);
+			$query['server.REQUEST_TIME']['$lt'] = intval($endTime);
 		}
 		$cursor = $coll->find( $query );
 		while ($cursor->hasNext()) {
 			$requestInfo = $cursor->getNext();
-			$this->AnalysisApiInfo( $requestInfo, 'mongo' );
+			$this->AnalysisApiInfo( $requestInfo );
 		}
 		if ($saveFlag) {
-			$this->SaveApiInfo($query['request_time']['$gte']);
+			$this->SaveApiInfo($query['server.REQUEST_TIME']['$gte']);
 		} else {
 			$this->Output();
 		}
@@ -175,17 +161,15 @@ class ApiStatus
 
 	public function DropApiAccessLogs()
 	{
-		$coll = $this->_connection->openapi_access_logs;
+		$coll = $this->_connection->hsq_open_api_logs;
 		$response = $coll->drop();
 		return $response;
 	}
 }
-
     $startTime = time();
 
     $apiStatus 		= new ApiStatus();
-    $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
+    $apiStatus->GetApiStatus($apiStatus->GetYesterday(), date("Y-m-d"), true);
 
     var_dump('解析数据总的处理时间:'. time() - $startTime);
-
 exit();

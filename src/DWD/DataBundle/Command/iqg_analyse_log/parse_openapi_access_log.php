@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * 爱抢购 open_api接口性能分析
+ * */
 require_once ('tools.php');
 
 class AccessLogParse
@@ -147,7 +149,6 @@ class AccessLogParse
 	public function RunCatelogLog()
 	{
 		$thisCatelog = scandir($this->_subjectPath);
-
 		foreach ( $thisCatelog as $thisFile ) {
 			if ( 0 == preg_match('/^access.+\.log/', $thisFile) ) {
 				continue;
@@ -166,16 +167,11 @@ class AccessLogParse
 
 try{
 	$startTime = time();
-//	$job =  __dir__ . '/' . implode(" ", $argv);
-//	$tool =  new Tool();
-//	$tool->SetStartTime( $startTime );
-//	$tool->SetJob( $job );
-//	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogBootstrapJSON('', 0));
 
 	$accessLogParse = new AccessLogParse();
 
     $serverIpArr = $accessLogParse->_config['server_ip'];
-//    var_dump($serverIpArr);exit;
+
 	foreach ( $serverIpArr as $key => $value ) {
         var_dump('处理第几台服务器====>' .$value);
 		$accessLogParse->SetSubjectPath($value);
@@ -185,9 +181,8 @@ try{
     $totalTime = time() - $startTime;
     var_dump('总的处理时间:'. $totalTime);
 
-	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON('', 0));
 } catch (Exception $e) {
-	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON($e->getMessage(), 99));
+
 	exit();
 }
 

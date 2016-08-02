@@ -38,6 +38,8 @@ namespace :deploy do
         run "chmod -R 777 #{release_path}/app/cache/"
         run "ln -s #{deploy_to}/shared/config/parameters.yml #{release_path}/app/config/parameters.yml"
         run "rm    #{release_path}/src/DWD/DataBundle/Command/iqg_analyse_log/config.ini"
+        run "rm    #{release_path}/src/DWD/DataBundle/Command/hsq_analyse_log/hsq-internalapi/config.ini"
+        run "rm    #{release_path}/src/DWD/DataBundle/Command/hsq_analyse_log/hsq-openapi/config.ini"
         run "ln -s #{deploy_to}/shared/config.ini #{release_path}/src/DWD/DataBundle/Command/iqg_analyse_log/config.ini"
         run "ln -s #{deploy_to}/shared/hsq-internalapi/config.ini #{release_path}/src/DWD/DataBundle/Command/hsq_analyse_log/hsq-internalapi/config.ini"
         run "ln -s #{deploy_to}/shared/hsq-openapi/config.ini #{release_path}/src/DWD/DataBundle/Command/hsq_analyse_log/hsq-openapi/config.ini"

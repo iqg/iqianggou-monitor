@@ -134,15 +134,10 @@ class InternalAccessLogParse
 try{
 	$startTime = time();
 
-//	$job =  __dir__ . '/' . implode(" ", $argv);
-//	$tool =  new Tool();
-//	$tool->SetStartTime( $startTime );
-//	$tool->SetJob( $job );
-//	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogBootstrapJSON('', 0));
-
     $internalAccessLogParse = new InternalAccessLogParse();
 
     $serverIpArr = $internalAccessLogParse->_config['server_ip'];
+
 	foreach ( $serverIpArr as $key => $value ) {
 
         $start = time();
@@ -155,9 +150,9 @@ try{
 
     $totalTime = time() - $startTime;
      var_dump('总的处理时间:'. $totalTime);
-//	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON('', 0));
+
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());
-	$tool->appendCrontabMonitorLog($tool->getCrontabMonitorLogEndJSON($e->getMessage(), 99));
+
 }
 

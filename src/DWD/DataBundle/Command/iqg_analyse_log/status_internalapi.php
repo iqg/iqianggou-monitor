@@ -154,12 +154,14 @@ class InternalApiStatus
 }
 
 try{
+
     ini_set('memory_limit','-1');
     $startTime = time();
     $apiStatus 		= new InternalApiStatus();
     $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
     $totalTime = time() - $startTime;
     var_dump('生成正式数据总的处理时间:'. $totalTime);
+
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());
 }

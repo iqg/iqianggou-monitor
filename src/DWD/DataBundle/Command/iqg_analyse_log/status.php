@@ -161,6 +161,7 @@ class ApiStatus
 			$query['request_time']['$lt'] = intval($endTime);
 		}
 		$cursor = $coll->find( $query );
+
 		while ($cursor->hasNext()) {
 			$requestInfo = $cursor->getNext();
 			$this->AnalysisApiInfo( $requestInfo, 'mongo' );
@@ -179,6 +180,7 @@ class ApiStatus
 		$response = $coll->drop();
 		return $response;
 	}
+
 }
 
     $startTime = time();

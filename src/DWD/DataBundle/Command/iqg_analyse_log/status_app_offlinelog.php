@@ -40,8 +40,8 @@ class AppOfflineLogStatus
         if( $requestInfo['cost'] <= 0 ){
             return ;
         }
-        if( !in_array($requestInfo['network'],['2G','3G','4G','Wi-Fi','otherNet'])  ){
-            echo  json_encode($requestInfo);
+        if( !in_array($requestInfo['network'],['2G','3G','4G','Wi-Fi','Wifi','otherNet'])  ){
+//            echo  json_encode($requestInfo);
             return ;
         }
         if($requestInfo['actionId'] == 'RequestLog'){

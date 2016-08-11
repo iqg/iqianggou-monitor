@@ -12,7 +12,7 @@ class ParseAppOfflineLog
 	private $_subjectPath = '';
 	private $_serverIp = '127.0.0.1';
 	private $_validHost = array( 'internalapi.iqianggou.dev.lab:12306' );
-	private $_iqianggouApp = array( 'iqianggou','爱抢购' );
+	private $_iqianggouApp = array( 'iqianggou','AiQiangGou','爱抢购' );
 	private $_haoshiqiApp   = array( 'haoshiqi','好食期' );
 	private $_serverId = 0;
 	public   $_config;
@@ -48,7 +48,8 @@ class ParseAppOfflineLog
                 $this->_data['actionId'] = $requestInfo['actionId'];
 
                 $this->_data['path'] = isset($requestInfo['actionExt']) ? $requestInfo['actionExt'] : '/';
-                $this->_data['network'] = isset($requestInfo['network']) ? $requestInfo['network'] : 'otherNet';
+                $network = isset($requestInfo['network']) ? $requestInfo['network'] : 'otherNet';
+                $this->_data['network'] = $network == 'Wifi' ? 'Wi-Fi' : $network;
 
                 $this->_data['cost'] = isset($requestInfo['note']['runloop']) ? $requestInfo['note']['runloop']:0;
                 $this->_data['size'] = isset( $requestInfo['note']['size'] ) ? $requestInfo['note']['size']:0;
@@ -56,9 +57,9 @@ class ParseAppOfflineLog
             }
         }
 
-        if( !empty($this->_data) && in_array($requestInfos['appName'],$this->_iqianggouApp) && version_compare($requestInfos['appVersion'],'4.2.0','>=') ){
+        if( !empty($this->_data) && in_array($requestInfos['appName'],$this->_iqianggouApp) && version_compare($requestInfos['appVersion'],'4.3.0','>=') ){
             $this->SaveIQGRequestInfo();
-        }elseif(!empty($this->_data) &&  in_array($requestInfos['appName'],$this->_haoshiqiApp) && version_compare($requestInfos['appVersion'],'1.5.0','>=') ){
+        }elseif(!empty($this->_data) &&  in_array($requestInfos['appName'],$this->_haoshiqiApp) && version_compare($requestInfos['appVersion'],'1.6.0','>=') ){
             $this->SaveHSQRequestInfo();
         }
 

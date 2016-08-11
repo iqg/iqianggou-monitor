@@ -1,5 +1,8 @@
 <?php
-
+/*
+ * 爱抢购 open_api接口性能分析
+ *
+ * */
 class ApiStatus
 {
 	private $statusInfo = array();// 数据量比较大
@@ -158,6 +161,7 @@ class ApiStatus
 			$query['request_time']['$lt'] = intval($endTime);
 		}
 		$cursor = $coll->find( $query );
+
 		while ($cursor->hasNext()) {
 			$requestInfo = $cursor->getNext();
 			$this->AnalysisApiInfo( $requestInfo, 'mongo' );
@@ -176,34 +180,14 @@ class ApiStatus
 		$response = $coll->drop();
 		return $response;
 	}
+
 }
 
-$apiStatus 		= new ApiStatus();
-$apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
-//$apiStatus->GetApiStatus( "2015-09-16", "2015-09-17" );
+    $startTime = time();
+
+    $apiStatus 		= new ApiStatus();
+    $apiStatus->GetApiStatus( $apiStatus->GetYesterday(), date("Y-m-d"), true );
+
+    var_dump('解析数据总的处理时间:'. time() - $startTime);
+
 exit();
-
-$fileName 		= $apiStatus->GetYesterdayLogFile();
-$fp 			= fopen($fileName, "r"); 
-$error			= error_get_last();
-if (NULL != $error) {
-	exit();
-}
-
-while( !feof($fp) ) 
-{ 
-   $lineMsg     = fgets($fp);
-   $requestTime = $apiStatus->GetRequestTime( $lineMsg );
-   if (false == $apiStatus->CheckValidRequestTime()) {
-   		continue;
-   }
-   $lineMsg     =  substr( $lineMsg, 31, -2 );
-   $requestInfo = json_decode( $lineMsg, true );
-   if( false == isset( $requestInfo['request'] ) ){
-   }
-   else if('api.v3.iqianggou.com' == $requestInfo['request']['header']['host'][0] || 'm.iqianggou.com' == $requestInfo['request']['header']['host'][0]  ){
-   	 $apiStatus->AnalysisApiInfo( $requestInfo );
-   }
-} 
-fclose($fp);
-$apiStatus->Output();

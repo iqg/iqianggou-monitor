@@ -95,3 +95,7 @@
 .tabbable .tab-content {
     margin-top: 30px;
 }
+
+.nav li a {
+ padding: 1px 11px;
+}

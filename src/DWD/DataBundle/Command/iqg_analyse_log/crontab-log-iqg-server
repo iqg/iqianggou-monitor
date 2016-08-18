@@ -18,7 +18,7 @@ HOST6=114.55.86.62
 HOST7=114.55.86.92
 HOST8=114.55.86.80
 
-LOCAL_BASE=/data/logs/iqg-api    #目前因为在好时期数据已经同步了，改脚本可以不用执行
+LOCAL_BASE=/data/logs/iqg-api    #目前因为在好时期数据已经同步了，该脚本可以不用执行
 
 LOCAL_DIR1=$LOCAL_BASE/HOST1/
 LOCAL_DIR2=$LOCAL_BASE/HOST2/

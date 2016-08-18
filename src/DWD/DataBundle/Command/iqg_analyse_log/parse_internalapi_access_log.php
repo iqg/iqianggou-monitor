@@ -39,9 +39,6 @@ class InternalAccessLogParse
 		if (false == isset( $requestInfo['server'] )) {
 			return false;
 		}
-//		if ( false == in_array( $requestInfo['server']['HTTP_HOST'], $this->_validHost ) ) {
-//			return false;
-//		}
 
 		if (isset( $requestInfo['errno'] )) {
 			$this->_data['ResponseStatusCode'] = $requestInfo['errno'];
@@ -98,7 +95,8 @@ class InternalAccessLogParse
 		$error			= error_get_last();
 
 		if (NULL != $error) {
-			exit('读取文件异常,系统退出');
+			echo $fileName ."读取文件异常,系统退出\n";
+            return false;
 		}
 
 		echo "Start parse Internal_API access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
@@ -153,6 +151,5 @@ try{
 
 } catch (Exception $e) {
     var_dump($e->getMessage(),$e->getCode());
-
 }
 

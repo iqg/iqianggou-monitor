@@ -117,7 +117,8 @@ class AccessLogParse
 		$fp 			= fopen( $fileName, "r" );
 		$error			= error_get_last();
 		if (NULL != $error) {
-			exit('读取文件异常,系统退出');
+			echo $fileName.'读取文件异常,系统退出';
+            return false;
 		}
 
 		echo "Start parse OpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";

@@ -114,10 +114,18 @@ class AccessLogParse
 
 	public function RunAction( $fileName )
 	{
+
+        if(!file_exists($fileName)) {
+            var_dump($fileName .'文件不存在');
+            return false;
+        }
+
 		$fp 			= fopen( $fileName, "r" );
 		$error			= error_get_last();
+
 		if (NULL != $error) {
-			echo $fileName.'读取文件异常,系统退出';
+			echo $fileName." 读取文件异常,系统退出 \n";
+            fclose( $fp );
             return false;
 		}
 
@@ -183,7 +191,7 @@ try{
     var_dump('总的处理时间:'. $totalTime);
 
 } catch (Exception $e) {
-
+    var_dump('捕获到异常');
 	exit();
 }
 

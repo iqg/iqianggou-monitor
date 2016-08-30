@@ -161,7 +161,7 @@ class HsqInternalApiStatus
 	{
 		$coll = $this->_connection->hsq_internal_api_logs;
 		$response = $coll->drop();
-        var_dump('删除hsq_internal_api_logs数据是否成功：',$response);
+        var_dump('删除　hsq_internal_api_logs 数据是否成功2：',$response);
 		return $response;
 	}
 }
@@ -170,6 +170,6 @@ class HsqInternalApiStatus
     $apiStatus 		= new HsqInternalApiStatus();
     $apiStatus->GetApiStatus($apiStatus->GetYesterday(), date("Y-m-d"), true);
 
-    var_dump('解析数据总的处理时间:'. time() - $startTime);
+    var_dump('生成正式数据总的处理时间:'. time() - $startTime);
 
 exit();

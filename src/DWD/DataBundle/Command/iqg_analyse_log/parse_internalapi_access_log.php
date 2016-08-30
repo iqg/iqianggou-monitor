@@ -91,8 +91,13 @@ class InternalAccessLogParse
 	public function RunAction( $fileName )
 	{
         ini_set('memory_limit','-1');
-		$fp 			= fopen( $fileName, "r" );
-		$error			= error_get_last();
+        if(!file_exists($fileName)) {
+            var_dump($fileName .'文件不存在');
+            return false;
+        }
+
+        $fp    = fopen( $fileName, "r" );
+		$error = error_get_last();
 
 		if (NULL != $error) {
 			echo $fileName ."读取文件异常,系统退出\n";

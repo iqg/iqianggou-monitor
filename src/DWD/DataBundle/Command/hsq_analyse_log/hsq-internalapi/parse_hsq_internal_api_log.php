@@ -83,13 +83,14 @@ class InternalAPILogParse
             var_dump($fileName .'文件不存在');
 			return false;
 		}
+
 		$fp 			= fopen( $fileName, "r" );
 		$error			= error_get_last();
 		if (NULL != $error) {
 			return false;
 		}
 
-		echo "Start parse  HsqOpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
+		echo "Start parse  hsq internalAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
 
 		while( !feof( $fp ) )
 		{
@@ -104,7 +105,7 @@ class InternalAPILogParse
 			}
 		}
 
-		echo "End parse OpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
+		echo "End parse hsq internalAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
 
 		fclose( $fp );
 	}
@@ -141,7 +142,7 @@ try{
 	$internalAPILogParse->RunYesterdayLog();
 
     $totalTime = time() - $startTime;
-    var_dump('生成正式数据总的处理时间:'. $totalTime);
+    var_dump('解析数据总的处理时间:'. $totalTime);
 
 } catch (Exception $e) {
 	print $e->getMessage();

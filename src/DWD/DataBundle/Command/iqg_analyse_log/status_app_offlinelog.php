@@ -47,7 +47,9 @@ class AppOfflineLogStatus
         if($requestInfo['actionId'] == 'RequestLog'){
 
             $path = $requestInfo['path'];
-            $path    = preg_replace( "/\/\d+/", "/:id", $path );
+            $path    = preg_replace( "/\/\d+\w+/", "/:id", $path );
+            $path    = preg_replace( "/\/\d+\/\w+/", "/:id", $path );
+
             $path    = explode("?",$path)[0];
 
             $network = $requestInfo['network'];

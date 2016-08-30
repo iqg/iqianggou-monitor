@@ -83,6 +83,7 @@ class OpenAPILogParse
             var_dump($fileName .'文件不存在');
 			return false;
 		}
+
 		$fp 			= fopen( $fileName, "r" );
 		$error			= error_get_last();
 		if (NULL != $error) {

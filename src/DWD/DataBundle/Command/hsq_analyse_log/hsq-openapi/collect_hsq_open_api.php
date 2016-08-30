@@ -1,6 +1,6 @@
 <?php
 
-class ApiStatus
+class OpenApiStatus
 {
 	private $statusInfo = array();
 	public $requestTime;
@@ -151,11 +151,9 @@ class ApiStatus
 			$requestInfo = $cursor->getNext();
 			$this->AnalysisApiInfo( $requestInfo );
 		}
-		if ($saveFlag) {
-			$this->SaveApiInfo($query['server.REQUEST_TIME']['$gte']);
-		} else {
-			$this->Output();
-		}
+
+        $this->SaveApiInfo($query['server.REQUEST_TIME']['$gte']);
+
 		$this->DropApiAccessLogs();
 	}
 
@@ -163,13 +161,14 @@ class ApiStatus
 	{
 		$coll = $this->_connection->hsq_open_api_logs;
 		$response = $coll->drop();
+        var_dump('删除 hsq_open_api_logs 数据是否成功：',$response);
 		return $response;
 	}
 }
     $startTime = time();
 
-    $apiStatus 		= new ApiStatus();
+    $apiStatus 		= new OpenApiStatus();
     $apiStatus->GetApiStatus($apiStatus->GetYesterday(), date("Y-m-d"), true);
 
     var_dump('解析数据总的处理时间:'. time() - $startTime);
-exit();
+   exit();

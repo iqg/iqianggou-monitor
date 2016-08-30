@@ -114,10 +114,19 @@ class AccessLogParse
 
 	public function RunAction( $fileName )
 	{
+
+        if(!file_exists($fileName)) {
+            var_dump($fileName .'文件不存在');
+            return false;
+        }
+
 		$fp 			= fopen( $fileName, "r" );
 		$error			= error_get_last();
+
 		if (NULL != $error) {
-			exit('读取文件异常,系统退出');
+			echo $fileName." 读取文件异常,系统退出 \n";
+            fclose( $fp );
+            return false;
 		}
 
 		echo "Start parse OpenAPI access log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n";
@@ -182,7 +191,7 @@ try{
     var_dump('总的处理时间:'. $totalTime);
 
 } catch (Exception $e) {
-
+    var_dump('捕获到异常');
 	exit();
 }
 

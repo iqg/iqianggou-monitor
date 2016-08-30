@@ -115,7 +115,8 @@ class ParseAppOfflineLog
 		$error			= error_get_last();
 
 		if (NULL != $error) {
-			exit('读取文件异常,系统退出');
+			echo $fileName . "读取文件异常\n ";
+            return false;
 		}
 		echo "Start parse app_offline_log[" . $fileName . "] at " . date('Y-m-d H:i:s') . "\n\n";
 

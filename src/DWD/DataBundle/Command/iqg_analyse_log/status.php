@@ -44,7 +44,8 @@ class ApiStatus
 			}
 		}
  
-        $path    = preg_replace( "/\/\d+/", "/:id", $path );
+        $path    = preg_replace( "/\/\d+\w+/", "/:id", $path );
+        $path    = preg_replace( "/\/\d+\/\w+/", "/:id", $path );
 
         if( $requestInfo['cost'] < 0 ){
         	return ;

@@ -19,7 +19,7 @@ use DWD\TongjiBundle\Util\OfflineLog\Service_Data_Iqg_Des;
 class Service_Data_Iqg_Addlog{
     protected $_key       = '';
     protected $_logprefix = 'appserverlogdata';
-    protected $_subjectpath = '/ace/log/';
+    protected $_subjectpath = '/data/logs/app_offline_log_new/';
     /*
      * @params $key 加密key
      * @params $logprefix 打印在日志的标志key

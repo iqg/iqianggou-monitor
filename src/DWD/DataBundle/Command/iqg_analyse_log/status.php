@@ -144,6 +144,9 @@ class ApiStatus
 	{
 		$coll = $this->_connection->openapi_access_data;
 		foreach ( $this->statusInfo as $pathInfo ) {
+            if($pathInfo['called']< 5){ //小于五次的调用，自动删除
+                continue;
+            }
 			$pathInfo['startTimestamp'] = $startTimestamp;
 			$coll->insert( $pathInfo );
 		}

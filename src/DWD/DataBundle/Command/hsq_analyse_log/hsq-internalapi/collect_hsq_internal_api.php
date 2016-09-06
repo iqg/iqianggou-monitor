@@ -129,6 +129,7 @@ class HsqInternalApiStatus
 	{
 		echo $startTimestamp;
 		$coll = $this->_connection->hsq_internal_api_data;
+
 		foreach ( $this->statusInfo as $pathInfo ) {
 			$pathInfo['startTimestamp'] = $startTimestamp;
 			if( NULL === $coll->findOne( array( 'path' => $pathInfo['path'], 'startTimestamp' => $startTimestamp ) )) {
@@ -143,11 +144,11 @@ class HsqInternalApiStatus
 		$query = array();
 		if (isset( $startTime )) {
 			$startTime = strtotime($startTime);
-			$query['server.REQUEST_TIME']['$gte'] = intval($startTime);
+			$query['server.REQUEST_TIME_FLOAT']['$gte'] = intval($startTime);
 		}
 		if (isset( $endTime )) {
 			$endTime = strtotime($endTime);
-			$query['server.REQUEST_TIME']['$lt'] = intval($endTime);
+			$query['server.REQUEST_TIME_FLOAT']['$lt'] = intval($endTime);
 		}
 		$cursor = $coll->find( $query );
 		while ($cursor->hasNext()) {
@@ -155,7 +156,7 @@ class HsqInternalApiStatus
 			$this->AnalysisApiInfo( $requestInfo );
 		}
 
-        $this->SaveApiInfo($query['server.REQUEST_TIME']['$gte']);
+        $this->SaveApiInfo($query['server.REQUEST_TIME_FLOAT']['$gte']);
 
 		$this->DropApiAccessLogs();
 	}

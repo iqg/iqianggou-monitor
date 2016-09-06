@@ -142,13 +142,15 @@ class OpenApiStatus
 	{
 		$coll = $this->_connection->hsq_open_api_logs;
 		$query = array();
+
 		if (isset( $startTime )) {
 			$startTime = strtotime($startTime);
-			$query['server.REQUEST_TIME']['$gte'] = intval($startTime);
+			$query['server.REQUEST_TIME_FLOAT']['$gte'] = intval($startTime);
 		}
+
 		if (isset( $endTime )) {
 			$endTime = strtotime($endTime);
-			$query['server.REQUEST_TIME']['$lt'] = intval($endTime);
+			$query['server.REQUEST_TIME_FLOAT']['$lt'] = intval($endTime);
 		}
 		$cursor = $coll->find( $query );
 		while ($cursor->hasNext()) {
@@ -156,7 +158,7 @@ class OpenApiStatus
 			$this->AnalysisApiInfo( $requestInfo );
 		}
 
-        $this->SaveApiInfo($query['server.REQUEST_TIME']['$gte']);
+        $this->SaveApiInfo($query['server.REQUEST_TIME_FLOAT']['$gte']);
 
 		$this->DropApiAccessLogs();
 	}
@@ -169,6 +171,7 @@ class OpenApiStatus
 		return $response;
 	}
 }
+
     $startTime = time();
 
     $apiStatus 		= new OpenApiStatus();

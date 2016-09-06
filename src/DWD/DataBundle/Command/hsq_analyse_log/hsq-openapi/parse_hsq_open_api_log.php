@@ -44,7 +44,7 @@ class OpenAPILogParse
 		if( !$this->_data['path'] ) {
 			return false;
 		} else {
-			$this->_data['path'] = '/' . $this->_data['path'];
+			$this->_data['path'] =   $this->_data['path'];
 		}
 		return true;
 	}

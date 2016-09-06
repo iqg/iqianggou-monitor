@@ -28,19 +28,13 @@ class Service_Data_Iqg_Addlog{
         $this->_key       = $key;
         $this->_logprefix = $logprefix;
         if (empty($this->_logprefix) || empty($this->_key)) {
-            return array(
-                    'errno'  => 901,
-                    'errmsg' => 'Server Error'
-            );
+            return $this->errorStatus( array(), 901, 'Server Error' );
         }
     }
 
     public function addLog($arrParams){
         if(empty($arrParams['logdata'])){
-            return array(
-                    'errno'  => 902,
-                    'errmsg' => 'logdata Missing'
-            );
+            return $this->errorStatus( $arrParams, 902, 'logdata Missing' );
         }
         try {
             $en_method   = new Service_Data_Iqg_Des($this->_key);
@@ -49,22 +43,15 @@ class Service_Data_Iqg_Addlog{
             $logdata     = json_decode(trim($logdata_des), true);
 
             if(!is_array($logdata)){
-                return array(
-                        'errno'  => 903,
-                        'errmsg' => 'logdata Content Error'
-                );
+                return $this->errorStatus( $arrParams, 903, 'logdata Content Error' );
             }
             $arrParams['logdata'] = $logdata;
             $this->saveLog($arrParams);
 
-            return array('errno'  => 0);
+            return $this->errorStatus( array(), 0, 'success' );
         } catch(Exception $e ){
-            return array(
-                    'errno'  => $e->getCode(),
-                    'errmsg' => $e->getMessage()
-            );
+            return $this->errorStatus( $arrParams, $e->getCode(), $e->getMessage() );
         }
-        return array('errno' => 0);
     }
 
     protected function saveLog($data){
@@ -73,5 +60,21 @@ class Service_Data_Iqg_Addlog{
         $filename           = $this->_subjectpath . $this->_logprefix . '-' . date('Y-m-d', $now) . '.log';
         $dataLine           = "[$currentTimeFormat] [INFO]: [" . json_encode($data) . "]\n";
         file_put_contents($filename, $dataLine, FILE_APPEND);
+    }
+
+    protected function errorStatus($data, $errno, $errmsg){
+        $result                 = array(
+                                    'errno'     => $errno,
+                                    'errmsg'    => $errmsg,
+                                  );
+        if( $errno != 0 ) {
+            $now                = time();
+            $currentTimeFormat  = date("Y-m-d H:i:s", $now);
+            $filename           = $this->_subjectpath . $this->_logprefix . '-' . date('Y-m-d', $now) . '.error.log';
+            $dataLine           = "[$currentTimeFormat] [INFO]: [" . json_encode($data) . "] [RETURN]: [" . json_encode($result) . "]\n";
+            file_put_contents($filename, $dataLine, FILE_APPEND);
+        }
+
+        return $result;
     }
 }

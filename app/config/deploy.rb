@@ -26,7 +26,7 @@ set  :keep_releases,  10
 # Be more verbose by uncommenting the following line
 logger.level = Logger::MAX_LEVEL
 
-set :stages,        %w(dev staging online)
+set :stages,        %w(dev staging online aliyun)
 set :default_stage, "dev"
 set :stage_dir,     "app/config/deploy_stage"
 

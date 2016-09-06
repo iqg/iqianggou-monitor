@@ -36,7 +36,9 @@ class OpenAPILogParse
 			return false;
 		}
 		$serverInfo = $requestInfo['server'];
-		$urlParts = explode('&', $serverInfo['QUERY_STRING']);
+//		$urlParts = explode('&', $serverInfo['QUERY_STRING']);
+        $urlParts = explode('?', $serverInfo['REQUEST_URI']);
+
 		$this->_data = $requestInfo;
 		$this->_data['path'] = current($urlParts);
 		if( !$this->_data['path'] ) {

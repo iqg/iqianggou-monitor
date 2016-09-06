@@ -31,7 +31,10 @@ class HsqInternalApiStatus
 	{
 		$path = $requestInfo['path'];
 
-		if( $requestInfo['cost'] < 0 ){
+        $path    = preg_replace( "/\/\d+\w+/", "/:id", $path );
+        $path    = preg_replace( "/\/\d+\/\w+/", "/:id", $path );
+
+        if( $requestInfo['cost'] < 0 ){
 			return ;
 		}
 		$requestInfo['cost'] = round($requestInfo['cost'], 2);

@@ -18,7 +18,15 @@ echo $YESTERDAY1
 
 INTERNALAPI_REMOTE_DIR=/data/www/internal_api.com/shared/logs/iqg_access_internal_api.log.$YESTERDAY1
 echo $INTERNALAPI_REMOTE_DIR
- 
+
+YESTERDAY2=`date -d 'yesterday' +'%Y-%m-%d'`
+echo $YESTERDAY2
+APP_OFFLINE_REMOTE_DIR_LOG=/data/logs/app_offline_log_new/appserverlogdata-$YESTERDAY2.log
+echo $APP_OFFLINE_REMOTE_DIR_LOG
+#错误日志
+APP_OFFLINE_REMOTE_DIR_ERR=/data/logs/app_offline_log_new/appserverlogdata-$YESTERDAY2.error.log
+echo $APP_OFFLINE_REMOTE_DIR_ERR
+
 HOST1=120.27.143.154
 HOST2=114.55.86.65
 # HOST3=120.27.192.210
@@ -27,6 +35,8 @@ HOST5=114.55.38.248
 HOST6=114.55.86.62
 HOST7=114.55.86.92
 HOST8=114.55.86.80
+
+HOST_Satellite=114.55.225.154 # 离线日志同步
 
 LOCAL_BASE=/data/logs/iqg-internal-api
 
@@ -56,3 +66,7 @@ echo $HOST7
 $RSYNC -avzi -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST7:$INTERNALAPI_REMOTE_DIR $INTERNAL_LOCAL_DIR7
 echo $HOST8
 $RSYNC -avzi -e "$SSHPASS -p $PASSWORD $SSH -p $PORT" --delete $USER@$HOST8:$INTERNALAPI_REMOTE_DIR $INTERNAL_LOCAL_DIR8
+
+echo $HOST_Satellite
+$RSYNC -avzi -e "$SSHPASS -p Iamyourdaddy $SSH -p $PORT" --delete work@$HOST_Satellite:$APP_OFFLINE_REMOTE_DIR_LOG /data/logs/app_offline_log_new/
+$RSYNC -avzi -e "$SSHPASS -p Iamyourdaddy $SSH -p $PORT" --delete work@$HOST_Satellite:$APP_OFFLINE_REMOTE_DIR_ERR /data/logs/app_offline_log_new/

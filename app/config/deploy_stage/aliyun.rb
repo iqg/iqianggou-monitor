@@ -8,9 +8,3 @@ set :branch,      "master"
 set :user,      "work"
 
 set :deploy_to,   "/data/www/monitor"
-
-namespace :deploy do
-    task :restart, :roles => :app, :except => { :no_release => true } do
-        run "supervisorctl -c /etc/supervisord/supervisord.conf restart php-fpm"
-    end
-end

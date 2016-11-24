@@ -9,7 +9,7 @@ imports:
 parameters:
 
 framework:
-    #esi:             ~
+    esi:             ~
     translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
@@ -26,9 +26,9 @@ framework:
     trusted_hosts:   ~
     trusted_proxies: ~
     session:
-#        cookie_domain: %cookie_domain%
-#        cookie_lifetime: %cookie_lifetime%
-        handler_id: session.handler.pdo
+        cookie_domain: %cookie_domain%
+        cookie_lifetime: %cookie_lifetime%
+#        handler_id: session.handler.pdo
     fragments:       ~
     http_method_override: true
 
